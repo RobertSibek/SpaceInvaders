@@ -10,7 +10,7 @@
 	[] add max lives for player
 		[] define max lives
 		[] show lives left in screen top
-	[x] add UFO (hell YEAH!)
+	[x] add UFO as class (hell YEAH!)
 	[] add score
 	[] add star field background (parallax vertical scroll in 3 rows)
  	[] intro screen   
@@ -66,10 +66,10 @@ const ALIEN_BOOST_MULT = 0.25; // higher means faster when few aliens left
 const PLAYER_WIDTH = 40;
 const PLAYER_HEIGHT = 40;
 const PLAYER_Y = CANVAS_HEIGHT - PLAYER_HEIGHT / 2;
-const MIN_SECONDS_TO_SPAWN_UFO = 3;
-const MAX_SECONDS_TO_SPAWN_UFO = 5;
-const UFO_Y = 35;
-const UFO_MOVE_SPEED = 1;
+//const MIN_SECONDS_TO_SPAWN_UFO = 3;
+//const MAX_SECONDS_TO_SPAWN_UFO = 5;
+//const UFO_Y = 35;
+//const UFO_MOVE_SPEED = 1;
 
 var alienGrid = new Array(ALIEN_COLS * ALIEN_ROWS);
 var aliensLeft;
@@ -83,7 +83,7 @@ var isFiring = false;
 var imgPlayer;
 var debugEnabled = true;
 var sfxLoadComplete = false;
-var ufoLastTimeSpawned = 0;
+var ufo = new ufoClass();
 
 // sounds
 var sfxPlayerFire;
@@ -126,9 +126,9 @@ var tomioMode = false;
 
 var currentFrame = 0;
 var nextUfoArrivalFrame;
-var ufoSpawned = false;
-var ufoX = -1;
-var ufoDirection = -1;
+//var ufoSpawned = false;
+//var ufoX = -1;
+//var ufoDirection = -1;
 var score = 0;
 var wave = 1;
 
@@ -238,12 +238,12 @@ function sfxLoadingDone() {
 	//
 	//		});
 	//	}
-
 }
 
 function loadingDoneSoStartGame() {
 	if (sfxLoadComplete) {
 		setInterval(game, 1000 / FRAMES_PER_SECOND);
+		ufo.init(imgUfo);
 		resetGame();
 	}
 }
@@ -263,7 +263,7 @@ function game() {
 
 function resetGame() {
 	resetAliens();
-	ufoReset();
+	ufo.reset();
 	currentFrame = 0;
 }
 
@@ -295,17 +295,14 @@ function playerShootIfReloaded() {
 }
 
 function pixelOnUfoCheck(whatX, whatY) {
-	if (ufoSpawned) {
-		if (whatY < 0 || whatY > UFO_Y) {
+	if (ufo.isActive) {
+		if (whatY < 0 || whatY > ufo.y) {
 			return false;
 		}
 
-		if (whatX > ufoX - imgUfo.width / 2 &&
-			whatX < ufoX + imgUfo.width / 2) {
-			// UFO hit
-			sfxUfoHit.play();
-			score += 150;			
-			ufoReset();
+		if (whatX > ufo.x - ufo.width / 2 &&
+			whatX < ufo.x + ufo.width / 2) {		
+			score += ufo.destroy();
 		}
 	}
 }
@@ -453,47 +450,6 @@ function drawAliens() {
 	} // end of for eachRow
 } // end of drawAliens()
 
-function getRandomIntInclusive(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
-}
-
-function drawUfo() {
-	if (ufoSpawned) {
-		ctx.drawImage(imgUfo, ufoX, 10);
-	} else {
-		// check if it's time to spawn next UFO
-		if (currentFrame >= nextUfoArrivalFrame) {
-			sfxUfoSpawned.play();
-			ufoSpawned = true;
-		}
-	}
-}
-
-function moveUfo() {
-	if (ufoSpawned) {
-		ufoX += UFO_MOVE_SPEED * ufoDirection;
-
-		if (ufoX < 0 || ufoX > CANVAS_WIDTH) {
-			ufoReset();
-		}
-	}
-}
-
-function ufoReset() {
-	ufoSpawned = false;
-	if (Math.random() > 0.5) {
-		ufoX = CANVAS_WIDTH - imgUfo.width;
-		ufoDirection = -1;
-	} else {
-		ufoX = imgUfo.width;
-		ufoDirection = 1;
-	}
-	nextUfoArrivalFrame = currentFrame + getRandomIntInclusive(MIN_SECONDS_TO_SPAWN_UFO, MAX_SECONDS_TO_SPAWN_UFO) * FRAMES_PER_SECOND;
-}
-
-
 // Rendering
 function drawEverything() {
 	switch (gameState) {
@@ -503,7 +459,7 @@ function drawEverything() {
 			colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
 			drawShots();
 			drawAliens();
-			drawUfo();
+			ufo.draw();
 			// draw player
 			ctx.drawImage(imgPlayer, playerX - imgPlayer.width / 2, CANVAS_HEIGHT - imgPlayer.height, imgPlayer.width, imgPlayer.height);
 
@@ -587,7 +543,7 @@ function moveEverything() {
 	if (gameState == GAME_STATE_GAME) {
 
 		moveAliens();
-		moveUfo();
+		ufo.move();
 		enemyInColAbovePlayerAttemptToFire();
 		// controlling player movement
 		if (keyHeld_Left) {
