@@ -14,10 +14,16 @@ const ALIEN1D = 9;
 const ALIEN2D = 10;
 const ALIEN3D = 11;
 
-var imgPlayer = document.createElement('img');
+var imgSpaceship1 = document.createElement('img');
+var imgSpaceship2 = document.createElement('img');
+var imgSpaceship3 = document.createElement('img');
+var imgSpaceship4 = document.createElement('img');
+//var imgPlayer = document.createElement('img');
 var imgPlayerShot = document.createElement('img');
 var imgEnemyShot = document.createElement('img');
 var imgUfo = document.createElement('img');
+var imgBg = document.createElement('img');
+var imgBgFrame = document.createElement('img');
 var picsLoaded = 0;
 var picsToLoad = 0;
 
@@ -34,10 +40,15 @@ function countLoadedImageAndLaunchIfReady() {
 function loadImages() {
 	debugText('Loading images');
 	var imageList = [
-		{ varName: imgPlayer, theFile: "playerSpaceshipScaled.png" },
+		{ varName: imgSpaceship1, theFile: "playerSpaceship1Scaled.png" },
+		{ varName: imgSpaceship2, theFile: "playerSpaceship2Scaled.png" },
+		{ varName: imgSpaceship3, theFile: "playerSpaceship3Scaled.png" },
+		{ varName: imgSpaceship4, theFile: "playerSpaceship4Scaled.png" },
 		{ varName: imgPlayerShot, theFile: "playerShot.png" },
 		{ varName: imgEnemyShot, theFile: "enemyShot.png" },
 		{ varName: imgUfo, theFile: "ufo.png" },
+		{ varName: imgBg, theFile: "cloudBackground.png" },
+		{ varName: imgBgFrame, theFile: "bgFrame.png" },
 		
 		{ alienType: ALIEN1A, theFile: "alien1a.png" },
 		{ alienType: ALIEN2A, theFile: "alien2a.png" },

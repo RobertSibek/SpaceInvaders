@@ -49,7 +49,7 @@ function starfieldClass() {
 	this.reset = function () {
 		this.timeToChange = this.currentFrame + getRandomIntInclusive(5, 20) * FRAMES_PER_SECOND;
 		if (this.dynamicLayers) {
-			this.moveSpeedX = Math.random() * this.speedX * getRandomIntInclusive(-1, 1);
+			this.moveSpeedX = getRandomIntInclusive(-2, 2);
 		} else {
 			starfield.moveSpeedX = 0;
 		}	
@@ -67,6 +67,17 @@ function starfieldClass() {
 		}
 	}
 
+	this.switchDynamicLayers = function () {
+		if (this.dynamicLayers) {
+			this.dynamicLayers = false;
+			debugText('starfieldClass: dynamic layers disabled');
+		} else {
+			this.dynamicLayers = true;
+			debugText('starfieldClass: dynamic layers enabled');
+		}
+		this.reset();
+	}
+	
 	this.addLayer = function () {
 		if (this.layerCount < MAX_LAYERS) {
 			this.layerCount++;

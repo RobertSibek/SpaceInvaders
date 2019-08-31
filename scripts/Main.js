@@ -1,33 +1,5 @@
 // Main.js
 
-/* TODOS:
-
-	[] CLEAN THE MESS! (refactor, refactor, refactor)
-	[x] add sounds
-		[x] add enemy hit sfx
-		[x] add player hit sfx
-		[x] add shot left screen sfx	
-	[] add max lives for player
-		[] define max lives
-		[] show lives left in screen top
-	[x] add UFO as class (hell YEAH!)
-	[x] add playerScore
-	[] implement difficulty increasing with each wave
-		[] increase points for aliens
-		[] increase alien movement speed
-		[] increase ufo points
-	[x] add star field background (parallax vertical scroll in 3 rows)
- 	[] intro screen   
-	[] performance check to adjust speed automatically for slower/faster machines
-	[x] shot as image
-	[] add easter eggs
-		[] babis mode (password ano)
-		[] tomio mode (password ninja)
-	
-*/
-
-const FRAMES_PER_SECOND = 60;
-
 // Game states
 const GAME_STATE_INTRO = 0;
 const GAME_STATE_MENU = 1;
@@ -35,39 +7,28 @@ const GAME_STATE_GAME = 2;
 const GAME_STATE_PAUSE = 3;
 const GAME_STATE_WINSCREEN = 4;
 
-// colors
-const CL_HEADER_TEXT = 'darkgreen';
-const CL_HEADER_BG = '#dddddd';
+// COLORS
+const CL_HEADER_TEXT = 'yellow';
+const CL_HEADER_BG = '';
 
-// fonts
+// HEADER SETTINGS
 const FNT_HEADER = '13px Arial';
-
-const HEADER_Y = 7;
+const HEADER_Y = 25;
 const HEADER_BG_HEIGHT = 25;
+const HEADER_DIST_FROM_EDGE = 50;
 
 const DISPLAY_TOP = HEADER_BG_HEIGHT;
 
-// Key definitions
-const KEY_LEFT = 37;
-const KEY_RIGHT = 39;
-const KEY_SPACEBAR = 32;
-const KEY_LESS_THAN = 188;
-const KEY_GREATER_THAN = 190;
-const KEY_LEFT_BRACKET = 219;
-const KEY_RIGHT_BRACKET = 221;
-const KEY_TAB = 9;
-const KEY_LETTER_A = 65;
-const KEY_LETTER_N = 78;
-const KEY_LETTER_O = 79;
-const KEY_LETTER_D = 68;
-const KEY_LETTER_H = 72;
-const KEY_LETTER_R = 82;
-const KEY_LETTER_P = 80;
-
+// PLAYER SETTINGS
+const PLAYER_WIDTH = 40;
+const PLAYER_HEIGHT = 80;
+const PLAYER_Y = CANVAS_HEIGHT - PLAYER_HEIGHT;
 const PLAYER_SHOT_SPEED = 20;
+const PLAYER_MOVE_SPEED = 30;
+var imgPlayer = imgSpaceship4;
+
+// ENEMY SETTINGS
 const ENEMY_SHOT_SPEED = 3;
-const SHIP_MOVE_SPEED = 10;
-const DEFAULT_SCALE_RATIO = 1 / 6;
 const MAX_ALIENS_IN_ROW = 15;
 const ALIEN_COLS = 15;
 const ALIEN_ROWS = 5;
@@ -75,15 +36,10 @@ const ALIEN_W = 46;
 const ALIEN_H = 36;
 const ALIEN_SPACING_W = 10;
 const ALIEN_SPACING_H = 5;
-const SWARM_ADVANCE_JUMP = 2;
-const ALIEN_POPULATION_BOOST_THRESHOLD = 20; // fewer than this, they speed up
+const SWARM_ADVANCE_JUMP = 5;
+const ALIEN_POPULATION_BOOST_THRESHOLD = 30; // fewer than this, they speed up
 const ALIEN_BOOST_MULT = 0.1; // higher means faster when few aliens left
 const ALIEN_POINTS = 50;
-
-// player constants and variables
-const PLAYER_WIDTH = 40;
-const PLAYER_HEIGHT = 40;
-const PLAYER_Y = CANVAS_HEIGHT - PLAYER_HEIGHT / 2;
 
 var alienGrid = new Array(ALIEN_COLS * ALIEN_ROWS);
 var aliensLeft;
@@ -102,7 +58,7 @@ var ufo = new ufoClass();
 var starfield = new starfieldClass();
 
 // Game settings
-var debugEnabled = true;
+var debugEnabled = false;
 var sfxON = true;
 var gameState = 2;
 var playerScore = 0;
@@ -155,15 +111,15 @@ window.onload = function () {
 	}
 
 	document.addEventListener('keydown', function (evt) {
-		//				debugText('Pressed key with code ' + evt.keyCode);
+		debugText('Pressed key with code ' + evt.keyCode);
 
 		if (evt.keyCode == KEY_LEFT) {
 			keyHeld_Left = true;
-//			starfield.moveSpeedX = (CX - playerX) / 100;
+			//			starfield.moveSpeedX = (CX - playerX) / 100;
 		}
 		if (evt.keyCode == KEY_RIGHT) {
 			keyHeld_Right = true;
-//			starfield.moveSpeedX = (CX - playerX) / 100;
+			//			starfield.moveSpeedX = (CX - playerX) / 100;
 		}
 		if (evt.keyCode == KEY_SPACEBAR) {
 			playerShootIfReloaded();
@@ -183,6 +139,20 @@ window.onload = function () {
 			letterSequence += 'o';
 			debugText('letterSequence = ' + letterSequence);
 		}
+		if (evt.keyCode == KEY_NUMBER_1) {
+			imgPlayer = imgSpaceship1;
+		}
+		if (evt.keyCode == KEY_NUMBER_2) {
+			imgPlayer = imgSpaceship2;
+		}
+		if (evt.keyCode == KEY_NUMBER_3) {
+			imgPlayer = imgSpaceship3;
+		}
+		if (evt.keyCode == KEY_NUMBER_4) {
+			imgPlayer = imgSpaceship4;
+		}
+
+
 		// Reset to default settings
 		if (evt.keyCode == KEY_LETTER_R) {
 			debugText('Reset to default');
@@ -214,14 +184,18 @@ window.onload = function () {
 		if (evt.keyCode == KEY_RIGHT_BRACKET) {
 			starfield.starPower += 1;
 		}
+		if (evt.keyCode == KEY_LETTER_L) {
+			starfield.switchDynamicLayers();
+		}
 		if (evt.keyCode == KEY_LETTER_H) {
 			debugText('--- HELP ---');
+			debugText('1-4 - change player\'s ship');
 			debugText('d - debug mode');
 			debugText('r - reset settings');
 			debugText('p - pause game');
 			debugText('h - help');
-			debugText('[,] - scale images');
-			debugText('<,> - scale canvas');
+			debugText('[,] - adjust star power');
+			debugText('<,> - add/remove starfield layer');
 			debugText('TAB - request next frame in pause mode');
 		}
 		if (letterSequence == 'ano') {
@@ -234,7 +208,7 @@ window.onload = function () {
 	})
 
 	document.addEventListener('keyup', function (evt) {
-		starfield.moveSpeedX = 0;
+		//		starfield.moveSpeedX = 0;
 		if (evt.keyCode == KEY_LEFT) {
 			keyHeld_Left = false;
 		}
@@ -243,9 +217,6 @@ window.onload = function () {
 		}
 		evt.preventDefault();
 	})
-
-	//	game();
-
 } // window.onload()
 
 function sfxLoadingDone() {
@@ -264,7 +235,7 @@ function sfxLoadingDone() {
 
 function loadingDoneSoStartGame() {
 	if (sfxLoadComplete) {
-		setInterval(game, 1000 / FRAMES_PER_SECOND);
+		setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
 		starfield.init();
 		ufo.init(imgUfo);
 		resetGame();
@@ -278,7 +249,7 @@ function debugText(text) {
 }
 
 // Main game loop
-function game() {
+function mainGame() {
 	currentFrame++;
 	moveEverything();
 	drawEverything();
@@ -306,7 +277,6 @@ function startNextWave() {
 		alienType = 0;
 	}
 	resetGame();
-
 }
 
 function alienTileToIndex(tileCol, tileRow) {
@@ -442,24 +412,26 @@ function recomputeSwarmGroupWidth() {
 }
 
 function drawHeader() {
-	colorRect(0, 0, CANVAS_WIDTH, HEADER_BG_HEIGHT, CL_HEADER_BG);
-	drawText(10, HEADER_Y, 'Score: ' + playerScore, CL_HEADER_TEXT, FNT_HEADER);
-	drawText(CX, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER);
+	//	colorRect(0, 0, CANVAS_WIDTH, HEADER_BG_HEIGHT, CL_HEADER_BG);
 	var w = imgPlayer.width / 4;
 	var h = imgPlayer.height / 4;
+	drawText(HEADER_DIST_FROM_EDGE, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER, 'left');
+	drawText(CX, HEADER_Y, 'Score: ' + playerScore, CL_HEADER_TEXT, FNT_HEADER, 'center');
+	drawText(CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 6 * w, HEADER_Y, 'Lives: ', CL_HEADER_TEXT, FNT_HEADER, 'left');
+
 	var headerOffsetY = 3;
 	switch (playerLives) {
 		case 3:
-			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 4 * w, HEADER_Y - headerOffsetY, w, h);
-			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 3 * w, HEADER_Y - headerOffsetY, w, h);
-			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 2 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 4 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 3 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 2 * w, HEADER_Y - headerOffsetY, w, h);
 			break;
 		case 2:
-			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 4 * w, HEADER_Y - headerOffsetY, w, h);
-			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 3 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 4 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 3 * w, HEADER_Y - headerOffsetY, w, h);
 			break;
 		case 1:
-			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 4 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 4 * w, HEADER_Y - headerOffsetY, w, h);
 			break;
 	}
 }
@@ -529,14 +501,17 @@ function drawEverything() {
 		case GAME_STATE_PAUSE:
 			ctx.fillStyle = 'black';
 			colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
+			ctx.globalAlpha = 0.1;
+			ctx.drawImage(imgBg, 0, 0);
+			ctx.globalAlpha = 1;
 			starfield.draw();
 			drawHeader();
 			drawShots();
 			drawAliens();
 			ufo.draw();
 			// draw player
-			ctx.drawImage(imgPlayer, playerX - imgPlayer.width / 2, CANVAS_HEIGHT - imgPlayer.height, imgPlayer.width, imgPlayer.height);
-
+			ctx.drawImage(imgPlayer, playerX - imgPlayer.width / 2, PLAYER_Y, imgPlayer.width, imgPlayer.height);
+			ctx.drawImage(imgBgFrame, 0, 0);
 			break;
 		default:
 			break;
@@ -605,7 +580,7 @@ function enemyShotCollisionsCheck() {
 		if (enemyShotX > playerX - imgPlayer.width && enemyShotX < playerX + imgPlayer.width) { // horizontally too?
 			sfxPlayerHit.play();
 			enemyShotIsActive = false;
-			if (playerLives > 1) {
+			if (playerLives > 0) {
 				playerLives--;
 				resetGame();
 			} else {
@@ -628,10 +603,10 @@ function moveEverything() {
 		enemyInColAbovePlayerAttemptToFire();
 		// controlling player movement
 		if (keyHeld_Left) {
-			nextX -= SHIP_MOVE_SPEED;
+			nextX -= PLAYER_MOVE_SPEED;
 		}
 		if (keyHeld_Right) {
-			nextX += SHIP_MOVE_SPEED;
+			nextX += PLAYER_MOVE_SPEED;
 		}
 
 		if (nextX > PLAYER_WIDTH / 2 &&

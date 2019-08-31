@@ -3,13 +3,17 @@
 const PATH_SFX = 'sounds/';
 
 var sfxPlayerFire = new Audio();
+sfxPlayerFire.volume = 0.2;
 var sfxPlayerHit = new Audio();
+sfxPlayerHit.volume = 0.5;
 var sfxEnemyFire = new Audio();
 var sfxEnemyHit = new Audio();
+sfxEnemyHit.volume = 0.2;
 var sfxGameStart = new Audio();
 var sfxShotLeft = new Audio();
 var sfxUfoHit = new Audio();
 var sfxUfoSpawned = new Audio();
+sfxUfoSpawned.volume = 1;
 var sfxLoaded = 0;
 var sfxToLoad = 0;
 
