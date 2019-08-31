@@ -50,7 +50,7 @@ function loadImages() {
 		{ alienType: ALIEN3C, theFile: "alien3c.png" },
 		{ alienType: ALIEN1D, theFile: "alien1d.png" },
 		{ alienType: ALIEN2D, theFile: "alien2d.png" },
-		{ alienType: ALIEN3D, theFile: "alien3d.png" },
+		{ alienType: ALIEN3D, theFile: "alien3d.png" }
 	];
 
 	picsToLoad = imageList.length;

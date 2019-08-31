@@ -4,11 +4,13 @@
 */
 
 const CANVAS_NAME = 'gameCanvas';
-var CANVAS_WIDTH = 800;
-var CANVAS_HEIGHT = 600;
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 600;
 const CX = CANVAS_WIDTH / 2; // Center X
 const CY = CANVAS_HEIGHT / 2; // Center Y
-const BG_COLOR = 'black';
+const CL_BACKGROUND = 'black';
+const CL_DEFAULT = 'white';
+const DEFAULT_FONT = '12px Arial';
 
 var canvas;
 var ctx;
@@ -45,10 +47,25 @@ function drawOutlineRect(x, y, width, height, color) {
 	ctx.strokeRect(x, y, width, height);
 }
 
+function drawText(x, y, text) {
+	ctx.font = DEFAULT_FONT;
+	ctx.fillStyle = CL_DEFAULT;
+	ctx.textAlign = 'left';
+	ctx.fillText(text, x, y);
+}
+
 function drawText(x, y, text, color) {
-	ctx.font = '12px Arial';
+	ctx.font = DEFAULT_FONT;
 	ctx.fillStyle = color;
-	ctx.textAlign = 'center';
+	ctx.textAlign = 'left';
+	ctx.fillText(text, x, y);
+}
+
+function drawText(x, y, text, color, font) {
+	ctx.font = font;
+	ctx.fillStyle = color;
+	ctx.textAlign = 'left';
+	ctx.textBaseline = 'top';
 	ctx.fillText(text, x, y);
 }
 

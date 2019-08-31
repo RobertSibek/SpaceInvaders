@@ -11,7 +11,11 @@
 		[] define max lives
 		[] show lives left in screen top
 	[x] add UFO as class (hell YEAH!)
-	[] add score
+	[x] add playerScore
+	[] implement difficulty increasing with each wave
+		[] increase points for aliens
+		[] increase alien movement speed
+		[] increase ufo points
 	[] add star field background (parallax vertical scroll in 3 rows)
  	[] intro screen   
 	[] performance check to adjust speed automatically for slower/faster machines
@@ -23,13 +27,25 @@
 */
 
 const FRAMES_PER_SECOND = 60;
-const CL_BACKGROUND = 'black';
+
 // Game states
 const GAME_STATE_INTRO = 0;
 const GAME_STATE_MENU = 1;
 const GAME_STATE_GAME = 2;
 const GAME_STATE_PAUSE = 3;
 const GAME_STATE_WINSCREEN = 4;
+
+// colors
+const CL_HEADER_TEXT = 'darkgreen';
+const CL_HEADER_BG = '#dddddd';
+
+// fonts
+const FNT_HEADER = '13px Arial';
+
+const HEADER_Y = 7;
+const HEADER_BG_HEIGHT = 25;
+
+const DISPLAY_TOP = HEADER_BG_HEIGHT;
 
 // Key definitions
 const KEY_LEFT = 37;
@@ -48,11 +64,12 @@ const KEY_LETTER_H = 72;
 const KEY_LETTER_R = 82;
 const KEY_LETTER_P = 80;
 
+const PLAYER_SHOT_SPEED = 20;
+const ENEMY_SHOT_SPEED = 3;
 const SHIP_MOVE_SPEED = 10;
 const DEFAULT_SCALE_RATIO = 1 / 6;
 const MAX_ALIENS_IN_ROW = 15;
-//const MAX_ROWS = 5;
-const ALIEN_COLS = 5;
+const ALIEN_COLS = 15;
 const ALIEN_ROWS = 5;
 const ALIEN_W = 46;
 const ALIEN_H = 36;
@@ -60,43 +77,40 @@ const ALIEN_SPACING_W = 10;
 const ALIEN_SPACING_H = 5;
 const SWARM_ADVANCE_JUMP = 2;
 const ALIEN_POPULATION_BOOST_THRESHOLD = 20; // fewer than this, they speed up
-const ALIEN_BOOST_MULT = 0.25; // higher means faster when few aliens left
+const ALIEN_BOOST_MULT = 0.1; // higher means faster when few aliens left
+const ALIEN_POINTS = 50;
 
 // player constants and variables
 const PLAYER_WIDTH = 40;
 const PLAYER_HEIGHT = 40;
 const PLAYER_Y = CANVAS_HEIGHT - PLAYER_HEIGHT / 2;
-//const MIN_SECONDS_TO_SPAWN_UFO = 3;
-//const MAX_SECONDS_TO_SPAWN_UFO = 5;
-//const UFO_Y = 35;
-//const UFO_MOVE_SPEED = 1;
 
 var alienGrid = new Array(ALIEN_COLS * ALIEN_ROWS);
 var aliensLeft;
-var imgScaleRatio = DEFAULT_SCALE_RATIO;
+
 var playerX = CX;
 var nextX = playerX;
-var gameState = 2;
 var shotX;
 var shotY;
 var isFiring = false;
-var imgPlayer;
-var debugEnabled = true;
+var playerLives = 3;
+
 var sfxLoadComplete = false;
 var ufo = new ufoClass();
 
-// sounds
-var sfxPlayerFire;
+// Game settings
+var debugEnabled = true;
 var sfxON = true;
+var gameState = 2;
+var playerScore = 0;
+var currentWave = 1;
+
 var keyHeld_Left = false;
 var keyHeld_Right = false;
 
-var newShot = new shotClass();
 var alienPics = [];
-
-var testAlien = new alienClass();
 var aliens = [];
-var requestNextFrame = false;
+var alienType = 0;
 
 // variables related to the aliens moving as a group, depends on which are alive
 var swarmOffsetX = 0;
@@ -108,29 +122,19 @@ var swarmGroupLeftMargin = 0;
 var swarmGroupLowest = 0;
 
 // variables to keep track of player shot position
-var shotX = 75,
-	shotY = 75;
-const PLAYER_SHOT_SPEED = 20;
+var shotX = 75;
+var shotY = 75;
 var shotIsActive = false;
 
 // variables to keep track of enemy shot position
-var enemyShotX = 75,
-	enemyShotY = 75;
-const ENEMY_SHOT_SPEED = 3;
+var enemyShotX = 75;
+var enemyShotY = 75;
 var enemyShotIsActive = false;
-var letterSequence = '';
 
 // easter eggs
+var letterSequence = '';
 var andrejMode = false;
 var tomioMode = false;
-
-var currentFrame = 0;
-var nextUfoArrivalFrame;
-//var ufoSpawned = false;
-//var ufoX = -1;
-//var ufoDirection = -1;
-var score = 0;
-var wave = 1;
 
 window.onload = function () {
 	loadSounds();
@@ -267,6 +271,24 @@ function resetGame() {
 	currentFrame = 0;
 }
 
+function endGame() {
+	currentWave = 1;
+	playerScore = 0;
+	playerLives = 3;
+	alienType = 0;
+}
+
+function startNextWave() {
+	currentWave++;
+	if (alienType < 3) {
+		alienType++;
+	} else {
+		alienType = 0;
+	}
+	resetGame();
+
+}
+
 function alienTileToIndex(tileCol, tileRow) {
 	return (tileCol + ALIEN_COLS * tileRow);
 }
@@ -279,7 +301,7 @@ function isAlienAtTileCoord(alienTileCol, alienTileRow) {
 function playerShotCollisionsCheck() {
 	pixelOnAlienCheck(shotX, shotY);
 	pixelOnUfoCheck(shotX, shotY);
-	if (shotY < 0) { // if shot has moved beyond the top edge
+	if (shotY < DISPLAY_TOP) { // if shot has moved beyond the top edge
 		sfxShotLeft.play();
 		shotIsActive = false;
 	}
@@ -296,13 +318,13 @@ function playerShootIfReloaded() {
 
 function pixelOnUfoCheck(whatX, whatY) {
 	if (ufo.isActive) {
-		if (whatY < 0 || whatY > ufo.y) {
+		if (whatY < DISPLAY_TOP || whatY > ufo.y + PLAYER_SHOT_SPEED) {
 			return false;
 		}
 
 		if (whatX > ufo.x - ufo.width / 2 &&
-			whatX < ufo.x + ufo.width / 2) {		
-			score += ufo.destroy();
+			whatX < ufo.x + ufo.width / 2) {
+			playerScore += ufo.destroy();
 		}
 	}
 }
@@ -332,14 +354,16 @@ function pixelOnAlienCheck(whatX, whatY) {
 
 	var alienIndex = alienTileToIndex(tileCol, tileRow);
 
-	if (alienGrid[alienIndex] == 1) { // shot hit this alien
+	if (alienGrid[alienIndex] == 1) {
+		// shot hit this alien
 		sfxEnemyHit.play();
 		alienGrid[alienIndex] = 0;
+		playerScore += ALIEN_POINTS;
 		aliensLeft--;
 		shotIsActive = false;
 
 		if (aliensLeft == 0) {
-			resetGame();
+			startNextWave();
 		} else {
 			if (aliensLeft < ALIEN_POPULATION_BOOST_THRESHOLD) {
 				swarmLowPopulationSpeedBoost = 1.0 +
@@ -397,17 +421,40 @@ function recomputeSwarmGroupWidth() {
 	swarmGroupLowest = (bottomMostRow + 1) * ALIEN_H - ALIEN_SPACING_H;
 }
 
+function drawHeader() {
+	colorRect(0, 0, CANVAS_WIDTH, HEADER_BG_HEIGHT, CL_HEADER_BG);
+	drawText(10, HEADER_Y, 'Score: ' + playerScore, CL_HEADER_TEXT, FNT_HEADER);
+	drawText(CX, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER);
+	var w = imgPlayer.width / 4;
+	var h = imgPlayer.height / 4;
+	var headerOffsetY = 3;
+	switch (playerLives) {
+		case 3:
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 4 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 3 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 2 * w, HEADER_Y - headerOffsetY, w, h);
+			break;
+		case 2:
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 4 * w, HEADER_Y - headerOffsetY, w, h);
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 3 * w, HEADER_Y - headerOffsetY, w, h);
+			break;
+		case 1:
+			ctx.drawImage(imgPlayer, CANVAS_WIDTH - 4 * w, HEADER_Y - headerOffsetY, w, h);
+			break;
+	}
+}
+
 function resetAliens() {
 	aliensLeft = 0;
 	swarmLowPopulationSpeedBoost = 1.0;
 	swarmOffsetX = 0;
-	swarmOffsetY = 0;
+	swarmOffsetY = 2 * ALIEN_H;
 	swarmMoveDir = 1;
 
 	for (var eachRow = 0; eachRow < ALIEN_ROWS; eachRow++) {
 		for (var eachCol = 0; eachCol < ALIEN_COLS; eachCol++) {
 			var alienIndex = alienTileToIndex(eachCol, eachRow);
-			if (eachRow >= 2) { // only place aliens at or below margin line
+			if (eachRow >= 0) { // only place aliens at or below margin line
 				alienGrid[alienIndex] = 1;
 				aliensLeft++;
 			} else { // placing 0's for margin along the top
@@ -430,7 +477,7 @@ function drawShots() {
 }
 
 function drawAliens() {
-	var alienPicType = 7;
+	var alienPicType = alienType * 3;
 
 	for (var eachRow = 0; eachRow < ALIEN_ROWS; eachRow++) { // in each row within that col
 		for (var eachCol = 0; eachCol < ALIEN_COLS; eachCol++) { // in each column...
@@ -446,7 +493,12 @@ function drawAliens() {
 			} // end of isAlienAtTileCoord()
 		} // end of for eachCol
 		// change alien type for next row
-		alienPicType++;
+		if (alienPicType < alienPics.length - ALIEN_ROWS) {
+			alienPicType++;
+		} else {
+			alienPicType = 0;
+		}
+
 	} // end of for eachRow
 } // end of drawAliens()
 
@@ -457,6 +509,7 @@ function drawEverything() {
 		case GAME_STATE_PAUSE:
 			ctx.fillStyle = 'black';
 			colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
+			drawHeader();
 			drawShots();
 			drawAliens();
 			ufo.draw();
@@ -530,7 +583,13 @@ function enemyShotCollisionsCheck() {
 	if (enemyShotY >= PLAYER_Y && enemyShotY <= PLAYER_Y + imgPlayer.height) { // vertically over player
 		if (enemyShotX > playerX - imgPlayer.width && enemyShotX < playerX + imgPlayer.width) { // horizontally too?
 			sfxPlayerHit.play();
-			resetGame();
+			enemyShotIsActive = false;
+			if (playerLives > 1) {
+				playerLives--;
+				resetGame();
+			} else {
+				endGame();
+			}
 		}
 	}
 	if (enemyShotY > canvas.height) { // if shot has moved beyond the bottom edge
