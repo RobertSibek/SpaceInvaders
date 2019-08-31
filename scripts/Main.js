@@ -16,7 +16,7 @@
 		[] increase points for aliens
 		[] increase alien movement speed
 		[] increase ufo points
-	[] add star field background (parallax vertical scroll in 3 rows)
+	[x] add star field background (parallax vertical scroll in 3 rows)
  	[] intro screen   
 	[] performance check to adjust speed automatically for slower/faster machines
 	[x] shot as image
@@ -96,7 +96,10 @@ var isFiring = false;
 var playerLives = 3;
 
 var sfxLoadComplete = false;
+
+// class instances
 var ufo = new ufoClass();
+var starfield = new starfieldClass();
 
 // Game settings
 var debugEnabled = true;
@@ -156,9 +159,11 @@ window.onload = function () {
 
 		if (evt.keyCode == KEY_LEFT) {
 			keyHeld_Left = true;
+//			starfield.moveSpeedX = (CX - playerX) / 100;
 		}
 		if (evt.keyCode == KEY_RIGHT) {
 			keyHeld_Right = true;
+//			starfield.moveSpeedX = (CX - playerX) / 100;
 		}
 		if (evt.keyCode == KEY_SPACEBAR) {
 			playerShootIfReloaded();
@@ -197,6 +202,18 @@ window.onload = function () {
 			console.log('Debug mode ' + (debugEnabled ? 'OFF' : 'ON'));
 			debugEnabled = !debugEnabled;
 		}
+		if (evt.keyCode == KEY_LESS_THAN) {
+			starfield.addLayer();
+		}
+		if (evt.keyCode == KEY_GREATER_THAN) {
+			starfield.removeLayer();
+		}
+		if (evt.keyCode == KEY_LEFT_BRACKET) {
+			starfield.starPower -= 1;
+		}
+		if (evt.keyCode == KEY_RIGHT_BRACKET) {
+			starfield.starPower += 1;
+		}
 		if (evt.keyCode == KEY_LETTER_H) {
 			debugText('--- HELP ---');
 			debugText('d - debug mode');
@@ -217,6 +234,7 @@ window.onload = function () {
 	})
 
 	document.addEventListener('keyup', function (evt) {
+		starfield.moveSpeedX = 0;
 		if (evt.keyCode == KEY_LEFT) {
 			keyHeld_Left = false;
 		}
@@ -247,6 +265,7 @@ function sfxLoadingDone() {
 function loadingDoneSoStartGame() {
 	if (sfxLoadComplete) {
 		setInterval(game, 1000 / FRAMES_PER_SECOND);
+		starfield.init();
 		ufo.init(imgUfo);
 		resetGame();
 	}
@@ -268,6 +287,7 @@ function game() {
 function resetGame() {
 	resetAliens();
 	ufo.reset();
+	starfield.reset();
 	currentFrame = 0;
 }
 
@@ -509,6 +529,7 @@ function drawEverything() {
 		case GAME_STATE_PAUSE:
 			ctx.fillStyle = 'black';
 			colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
+			starfield.draw();
 			drawHeader();
 			drawShots();
 			drawAliens();
@@ -600,6 +621,7 @@ function enemyShotCollisionsCheck() {
 // Updating objects
 function moveEverything() {
 	if (gameState == GAME_STATE_GAME) {
+		starfield.move();
 
 		moveAliens();
 		ufo.move();

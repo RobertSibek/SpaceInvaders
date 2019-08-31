@@ -84,9 +84,9 @@ function colorRect(x, y, width, height, color) {
 } // drawRect()
 
 // Draw colored circle
-function colorCircle(x, y, r, a, color) {
+function colorCircle(x, y, r, color) {
 	ctx.fillStyle = color;
 	ctx.beginPath();
-	ctx.arc(x, y, r, 0, a, true);
+	ctx.arc(x, y, r, 0, Math.PI*2, true);
 	ctx.fill();
 } // drawCircle()
