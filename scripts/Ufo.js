@@ -2,8 +2,8 @@
 const UFO_SCORE = 150;
 const UFO_Y = 40;
 const MOVE_SPEED = 2;
-const MIN_SECONDS_TO_SPAWN = 3;
-const MAX_SECONDS_TO_SPAWN = 6;
+const MIN_SECONDS_TO_SPAWN = 5;
+const MAX_SECONDS_TO_SPAWN = 15;
 
 function ufoClass() {
 
@@ -15,8 +15,7 @@ function ufoClass() {
 		this.points = UFO_SCORE;
 		this.y = UFO_Y;
 		this.currentFrame = 0;
-		//		this.minSeconds = minSecondsToSpawn;
-		//		this.maxSeconds = maxSecondsToSpawn;
+		this.canBeSpawned = true;
 		this.reset();
 	}
 
@@ -34,12 +33,12 @@ function ufoClass() {
 	}
 
 	this.spawn = function () {
-		sfxUfoSpawned.play();
+		playSound(sfxUfoSpawned);
 		this.isActive = true;
 	}
 
 	this.destroy = function () {
-		sfxUfoHit.play();
+		playSound(sfxUfoHit);
 		this.reset();
 		return this.points;
 	}
@@ -60,7 +59,8 @@ function ufoClass() {
 			ctx.drawImage(this.img, this.x, this.y);
 //			this.drawHitBox();
 		} else {
-			if (this.currentFrame >= this.nextTimeToSpawn) {
+			if (this.currentFrame >= this.nextTimeToSpawn &&
+			    this.canBeSpawned) {
 				this.spawn();
 			}
 		}
@@ -72,7 +72,9 @@ function ufoClass() {
 	}
 
 	this.getNextUfoArrivalTime = function () {
-		return (this.currentFrame + getRandomIntInclusive(MIN_SECONDS_TO_SPAWN, MAX_SECONDS_TO_SPAWN) * FRAMES_PER_SECOND);
+		var nextArrival = getRandomIntInclusive(MIN_SECONDS_TO_SPAWN, MAX_SECONDS_TO_SPAWN);
+		debugText('ufoClass: Next UFO arrival time in ' + nextArrival + ' seconds');
+		return (this.currentFrame + nextArrival * FRAMES_PER_SECOND);
 	}
 
 

@@ -3,7 +3,7 @@
 // Game states
 const GAME_STATE_INTRO = 0;
 const GAME_STATE_MENU = 1;
-const GAME_STATE_GAME = 2;
+const GAME_STATE_PLAY = 2;
 const GAME_STATE_PAUSE = 3;
 const GAME_STATE_WINSCREEN = 4;
 
@@ -12,10 +12,10 @@ const CL_HEADER_TEXT = 'yellow';
 const CL_HEADER_BG = '';
 
 // HEADER SETTINGS
-const FNT_HEADER = '13px Arial';
-const HEADER_Y = 25;
+const FNT_HEADER = '14px Tahoma';
+const HEADER_Y = 30;
 const HEADER_BG_HEIGHT = 25;
-const HEADER_DIST_FROM_EDGE = 50;
+const HEADER_DIST_FROM_EDGE = 55;
 
 const DISPLAY_TOP = HEADER_BG_HEIGHT;
 
@@ -24,8 +24,9 @@ const PLAYER_WIDTH = 40;
 const PLAYER_HEIGHT = 80;
 const PLAYER_Y = CANVAS_HEIGHT - PLAYER_HEIGHT;
 const PLAYER_SHOT_SPEED = 20;
-const PLAYER_MOVE_SPEED = 30;
+const PLAYER_MOVE_SPEED = 12;
 var imgPlayer = imgSpaceship4;
+var godModeEnabled = false;
 
 // ENEMY SETTINGS
 const ENEMY_SHOT_SPEED = 3;
@@ -56,11 +57,13 @@ var sfxLoadComplete = false;
 // class instances
 var ufo = new ufoClass();
 var starfield = new starfieldClass();
+var message = new messageClass();
 
 // Game settings
 var debugEnabled = false;
-var sfxON = true;
+var soundEnabled = true;
 var gameState = 2;
+var showKeyCodes = false;
 var playerScore = 0;
 var currentWave = 1;
 
@@ -110,9 +113,21 @@ window.onload = function () {
 		}
 	}
 
-	document.addEventListener('keydown', function (evt) {
-		debugText('Pressed key with code ' + evt.keyCode);
+	// check if possible to create helper function which takes keyCode and function as parameters
+	//	function setActionForKey(keyCode, function ()) {
+	//		if (evt.keyCode == keyCode) {
+	//			action;
+	//		}
+	//	}
 
+	document.addEventListener('keydown', function (evt) {
+		if (showKeyCodes) {
+			debugText('Pressed key with code ' + evt.keyCode);
+		}
+		if (evt.keyCode == KEY_BACKSPACE) {
+			showKeyCodes = !showKeyCodes;
+			debugText('Show keyCodes ' + (showKeyCodes ? 'enabled' : 'disabled'));
+		}
 		if (evt.keyCode == KEY_LEFT) {
 			keyHeld_Left = true;
 			//			starfield.moveSpeedX = (CX - playerX) / 100;
@@ -139,6 +154,30 @@ window.onload = function () {
 			letterSequence += 'o';
 			debugText('letterSequence = ' + letterSequence);
 		}
+		// Turn God mode on/off
+		if (evt.keyCode == KEY_LETTER_G) {
+			if (godModeEnabled) {
+				godModeEnabled = false;
+				message.push('God mode disabled');
+				debugText('God mode disabled');
+			} else {
+				godModeEnabled = true;
+				message.push('God mode enabled');
+				debugText('God mode enabled');
+			}
+		}
+		// Turn sound fx on/off
+		if (evt.keyCode == KEY_LETTER_S) {
+			if (soundEnabled) {
+				soundEnabled = false;
+				debugText('Sound effects disabled');
+				message.push('Sound effects disabled');
+			} else {
+				soundEnabled = true;
+				debugText('Sound effects enabled');
+				message.push('Sound effects enabled');
+			}
+		}
 		if (evt.keyCode == KEY_NUMBER_1) {
 			imgPlayer = imgSpaceship1;
 		}
@@ -160,14 +199,17 @@ window.onload = function () {
 			letterSequence = '';
 		}
 		if (evt.keyCode == KEY_LETTER_P) {
-			if (gameState == GAME_STATE_GAME) {
+			if (gameState == GAME_STATE_PLAY) {
 				gameState = GAME_STATE_PAUSE;
+				ufo.canBeSpawned = false;
 				debugText('Game paused');
 			} else {
-				gameState = GAME_STATE_GAME;
+				gameState = GAME_STATE_PLAY;
+				ufo.canBeSpawned = true;
 				debugText('Game resumed');
 			}
 		}
+
 		if (evt.keyCode == KEY_LETTER_D) {
 			console.log('Debug mode ' + (debugEnabled ? 'OFF' : 'ON'));
 			debugEnabled = !debugEnabled;
@@ -178,14 +220,19 @@ window.onload = function () {
 		if (evt.keyCode == KEY_GREATER_THAN) {
 			starfield.removeLayer();
 		}
+		
+		// fix the out of bounds behaviour
 		if (evt.keyCode == KEY_LEFT_BRACKET) {
-			starfield.starPower -= 1;
+			var pow = starfield.setPower(-1);
+			message.push('Starfield power = ' + pow);
 		}
 		if (evt.keyCode == KEY_RIGHT_BRACKET) {
-			starfield.starPower += 1;
+			var pow = starfield.setPower(1);
+			message.push('Starfield power = ' + pow);
 		}
 		if (evt.keyCode == KEY_LETTER_L) {
-			starfield.switchDynamicLayers();
+			var dynLayers = starfield.switchDynamicLayers();
+			message.push('Starfield dynamic layers ' + (dynLayers ? 'enabled' : 'disabled'));
 		}
 		if (evt.keyCode == KEY_LETTER_H) {
 			debugText('--- HELP ---');
@@ -233,11 +280,17 @@ function sfxLoadingDone() {
 	//	}
 }
 
+function initInstances() {
+	starfield.init();
+	ufo.init(imgUfo);
+	message.init();
+
+}
+
 function loadingDoneSoStartGame() {
 	if (sfxLoadComplete) {
 		setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
-		starfield.init();
-		ufo.init(imgUfo);
+		initInstances();
 		resetGame();
 	}
 }
@@ -292,7 +345,7 @@ function playerShotCollisionsCheck() {
 	pixelOnAlienCheck(shotX, shotY);
 	pixelOnUfoCheck(shotX, shotY);
 	if (shotY < DISPLAY_TOP) { // if shot has moved beyond the top edge
-		sfxShotLeft.play();
+		playSound(sfxShotLeft);
 		shotIsActive = false;
 	}
 }
@@ -302,7 +355,7 @@ function playerShootIfReloaded() {
 		shotX = playerX;
 		shotY = PLAYER_Y;
 		shotIsActive = true;
-		sfxPlayerFire.play();
+		playSound(sfxPlayerFire);
 	}
 }
 
@@ -346,7 +399,7 @@ function pixelOnAlienCheck(whatX, whatY) {
 
 	if (alienGrid[alienIndex] == 1) {
 		// shot hit this alien
-		sfxEnemyHit.play();
+		playSound(sfxEnemyHit);
 		alienGrid[alienIndex] = 0;
 		playerScore += ALIEN_POINTS;
 		aliensLeft--;
@@ -417,9 +470,9 @@ function drawHeader() {
 	var h = imgPlayer.height / 4;
 	drawText(HEADER_DIST_FROM_EDGE, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER, 'left');
 	drawText(CX, HEADER_Y, 'Score: ' + playerScore, CL_HEADER_TEXT, FNT_HEADER, 'center');
-	drawText(CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 6 * w, HEADER_Y, 'Lives: ', CL_HEADER_TEXT, FNT_HEADER, 'left');
+	drawText(CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 6.5 * w, HEADER_Y, 'Lifes: ', CL_HEADER_TEXT, FNT_HEADER, 'left');
 
-	var headerOffsetY = 3;
+	var headerOffsetY = 1;
 	switch (playerLives) {
 		case 3:
 			ctx.drawImage(imgPlayer, CANVAS_WIDTH - HEADER_DIST_FROM_EDGE - 4 * w, HEADER_Y - headerOffsetY, w, h);
@@ -497,7 +550,7 @@ function drawAliens() {
 // Rendering
 function drawEverything() {
 	switch (gameState) {
-		case GAME_STATE_GAME:
+		case GAME_STATE_PLAY:
 		case GAME_STATE_PAUSE:
 			ctx.fillStyle = 'black';
 			colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
@@ -509,6 +562,7 @@ function drawEverything() {
 			drawShots();
 			drawAliens();
 			ufo.draw();
+			message.draw();
 			// draw player
 			ctx.drawImage(imgPlayer, playerX - imgPlayer.width / 2, PLAYER_Y, imgPlayer.width, imgPlayer.height);
 			ctx.drawImage(imgBgFrame, 0, 0);
@@ -569,7 +623,7 @@ function enemyInColAbovePlayerAttemptToFire() {
 			enemyShotY = swarmOffsetY + eachRow * ALIEN_H + (ALIEN_H - ALIEN_SPACING_H) * 0.5;
 			enemyShotIsActive = true;
 			sfxEnemyFire.volume = 0.1;
-			sfxEnemyFire.play();
+			playSound(sfxEnemyFire);
 			return; // lowest alien found, no need to keep searching
 		}
 	}
@@ -578,14 +632,21 @@ function enemyInColAbovePlayerAttemptToFire() {
 function enemyShotCollisionsCheck() {
 	if (enemyShotY >= PLAYER_Y && enemyShotY <= PLAYER_Y + imgPlayer.height) { // vertically over player
 		if (enemyShotX > playerX - imgPlayer.width && enemyShotX < playerX + imgPlayer.width) { // horizontally too?
-			sfxPlayerHit.play();
-			enemyShotIsActive = false;
-			if (playerLives > 0) {
-				playerLives--;
-				resetGame();
+			// player has been hit by enemy
+			if (!godModeEnabled) {
+				playSound(sfxPlayerHit);
+				enemyShotIsActive = false;
+				if (playerLives > 0) {
+					playerLives--;
+					resetGame();
+				} else {
+					endGame();
+				}
 			} else {
-				endGame();
+				playSound(sfxGodProtection);
 			}
+
+
 		}
 	}
 	if (enemyShotY > canvas.height) { // if shot has moved beyond the bottom edge
@@ -593,29 +654,45 @@ function enemyShotCollisionsCheck() {
 	}
 } // end of enemyShotCollisionsCheck()
 
+function movePlayer() {
+	// controlling player movement
+	if (keyHeld_Left) {
+		nextX -= PLAYER_MOVE_SPEED;
+	}
+	if (keyHeld_Right) {
+		nextX += PLAYER_MOVE_SPEED;
+	}
+
+	if (nextX > PLAYER_WIDTH / 2 &&
+		nextX < CANVAS_WIDTH - PLAYER_WIDTH / 2) {
+		playerX = nextX;
+	} else {
+		nextX = playerX;
+		// out of bounds
+	}
+}
 // Updating objects
 function moveEverything() {
-	if (gameState == GAME_STATE_GAME) {
+	if (gameState == GAME_STATE_PLAY) {
 		starfield.move();
-
 		moveAliens();
 		ufo.move();
 		enemyInColAbovePlayerAttemptToFire();
-		// controlling player movement
-		if (keyHeld_Left) {
-			nextX -= PLAYER_MOVE_SPEED;
-		}
-		if (keyHeld_Right) {
-			nextX += PLAYER_MOVE_SPEED;
-		}
-
-		if (nextX > PLAYER_WIDTH / 2 &&
-			nextX < CANVAS_WIDTH - PLAYER_WIDTH / 2) {
-			playerX = nextX;
-		} else {
-			nextX = playerX;
-			// out of bounds
-		}
 		moveShots();
+		movePlayer();
+		message.animate();
+	} else if (gameState == GAME_STATE_PAUSE) {
+		if (requestNextFrame) {
+			starfield.move();
+			moveAliens();
+			ufo.move();
+			enemyInColAbovePlayerAttemptToFire();
+			moveShots();
+			movePlayer();
+			requestNextFrame = false;
+		} else {
+			// RELAX.zzzzzzzz
+		}
 	}
+
 } // moveEverything()

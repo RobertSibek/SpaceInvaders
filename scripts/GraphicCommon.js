@@ -11,7 +11,7 @@ const CY = CANVAS_HEIGHT / 2; // Center Y
 const CL_BACKGROUND = 'black';
 const CL_DEFAULT = 'white';
 const DEFAULT_FONT = '12px Arial';
-const FRAMES_PER_SECOND = 60;
+var FRAMES_PER_SECOND = 60;
 
 var canvas;
 var ctx;
@@ -52,6 +52,13 @@ function drawText(x, y, text) {
 	ctx.font = DEFAULT_FONT;
 	ctx.fillStyle = CL_DEFAULT;
 	ctx.textAlign = 'left';
+	ctx.fillText(text, x, y);
+}
+
+function customText(x, y, text, color, font, align) {
+	ctx.font = font;
+	ctx.fillStyle = color;
+	ctx.textAlign = align;
 	ctx.fillText(text, x, y);
 }
 

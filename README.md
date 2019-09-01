@@ -1,19 +1,26 @@
 # Space Invaders
 
-## Version 1.0.0
+## Version 1.1.0
 ## Created by Robert Sibek, Bad Mug Games
 
 ### TODOS
+[] publish game on itch.io
 [] CLEAN THE MESS! (refactor, refactor, refactor) (1)
+[] allow changing FPS (for perf. tuning) (2)
+[] change horizontal speed of starfield based on player's movement
+[] destroy player when aliens are below critical level
+[x] show major messages on the screen instead in debug (eg. sfx on/off)
+[] separate alien scoring for each row ("frontmen" are cheaper :-)
 [] download/create retro game machine frame
 [] add god mode for testing (1)
-	[] player is unaffected by enemy shots
+	[x] player is unaffected by enemy shots
+	[] display shield when player in god mode and get hit by enemy
 	[] player can blast rest of aliens by pressing G key (this will call the next wave)
 [] reset alien grid (1)
 	[] when game starts
 	[] when player looses all lifes
 	[] on new wave
-	[] NOT when player loose one life only
+	[x] NOT when player loose one life only
 [] adjust player control to be more precise (2)
 [] add player spaceship energy shields (3)
 	[] show them as five orange rectangles (=====) 
@@ -35,6 +42,7 @@
 [] create player class (2)
 	[] allow to setup spaceship image
 	[] allow to setup shot image
+	[] allow to setup separate sfx for each ship
 [] implement difficulty increasing with each wave (2)
 	[] increase points for aliens
 	[] increase alien movement speed
@@ -43,9 +51,13 @@
 [] intro screen (4)
 [] performance check to adjust speed automatically for slower/faster machines (5)
 [x] shot as image
+[] add rewind time feature
+	[] create framebuffer for x-seconds
+	[] store each frame in the buffer, if it's longer rewrite from beginning
+	[] allow to go back in time
 [] add easter eggs (5)
-	[] babis mode (password ano)
-	[] tomio mode (password ninja)
+	[] babis mode 1 (password ano)
+	[] special mode 2 (password ninja)
 
 ### KNOWN BUGS:
 - Ufo's hitbox is poor
@@ -56,4 +68,13 @@
 - enhanced graphic
 - animated starfield background
 - standard controls
+
+### version 1.1
+- god mode added
+- sound effect can be enabled/disabled now
+- new UFO arrival sound
+- retro tv frame added
+- enhanced background
+- major messages now visible on screen (not just in console)
+
 

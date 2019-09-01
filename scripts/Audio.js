@@ -1,4 +1,4 @@
-/* SoundLoading.js - handling loading sounds */
+/* Audio.js - handling loading sounds */
 
 const PATH_SFX = 'sounds/';
 
@@ -6,6 +6,7 @@ var sfxPlayerFire = new Audio();
 sfxPlayerFire.volume = 0.2;
 var sfxPlayerHit = new Audio();
 sfxPlayerHit.volume = 0.5;
+var sfxGodProtection = new Audio();
 var sfxEnemyFire = new Audio();
 var sfxEnemyHit = new Audio();
 sfxEnemyHit.volume = 0.2;
@@ -32,12 +33,13 @@ function loadSounds() {
 	var soundList = [
 		{ varName: sfxPlayerFire, theFile: "playerFire.wav" },
 		{ varName: sfxPlayerHit, theFile: "playerHit.wav" },
+		{ varName: sfxGodProtection, theFile: "godProtection.wav" },
 		{ varName: sfxEnemyFire, theFile: "enemyFire.wav" },
 		{ varName: sfxEnemyHit, theFile: "enemyHit.wav" },
 		{ varName: sfxGameStart, theFile: "gameStart.wav" },
 		{ varName: sfxShotLeft, theFile: "shotLeft.wav" },
 		{ varName: sfxUfoHit, theFile: "ufoHit.wav" },
-		{ varName: sfxUfoSpawned, theFile: "ufoSpawned.wav" }
+		{ varName: sfxUfoSpawned, theFile: "ufoSpawned2.wav" }
 	];
 
 	sfxToLoad = soundList.length;
@@ -49,4 +51,10 @@ function loadSounds() {
 function beginLoadingSound(sfxVar, fileName) {
 	sfxVar.onload = countLoadedSfxAndLaunchIfReady();
 	sfxVar.src = PATH_SFX + fileName;
+}
+
+function playSound(sfx) {
+	if (soundEnabled) {
+		sfx.play();		
+	}
 }
