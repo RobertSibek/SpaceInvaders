@@ -5,21 +5,24 @@
 
 ### TODOS
 [] publish game on itch.io
-[] CLEAN THE MESS! (refactor, refactor, refactor) (1)
+[x] CLEAN THE MESS! (refactor, refactor, refactor) (1)
+[] improve advancing to new wave
+	[] display animated text in the screen center
+	[] animate new alien swarm arrival (short delay between showing them left to right?)
 [] allow changing FPS (for perf. tuning) (2)
 [] change horizontal speed of starfield based on player's movement
 [] destroy player when aliens are below critical level
 [x] show major messages on the screen instead in debug (eg. sfx on/off)
 [] separate alien scoring for each row ("frontmen" are cheaper :-)
-[] download/create retro game machine frame
+[x] download/create retro game machine frame 
 [] add god mode for testing (1)
 	[x] player is unaffected by enemy shots
 	[] display shield when player in god mode and get hit by enemy
-	[] player can blast rest of aliens by pressing G key (this will call the next wave)
-[] reset alien grid (1)
-	[] when game starts
-	[] when player looses all lifes
-	[] on new wave
+	[x] player can blast rest of aliens by pressing K key (this will call the next wave)
+[x] reset alien grid (1)
+	[x] when game starts
+	[x] when player looses all lifes
+	[x] on new wave
 	[x] NOT when player loose one life only
 [] adjust player control to be more precise (2)
 [] add player spaceship energy shields (3)
@@ -40,8 +43,9 @@
 [] make ufo animated from spritesheet
 	[] create ufo animation in blender
 [] create player class (2)
-	[] allow to setup spaceship image
-	[] allow to setup shot image
+	[x] create player class
+	[x] allow to setup spaceship image
+	[x] allow to setup shot image
 	[] allow to setup separate sfx for each ship
 [] implement difficulty increasing with each wave (2)
 	[] increase points for aliens
@@ -51,7 +55,7 @@
 [] intro screen (4)
 [] performance check to adjust speed automatically for slower/faster machines (5)
 [x] shot as image
-[] add rewind time feature
+[] add rewind time feature (fcf)
 	[] create framebuffer for x-seconds
 	[] store each frame in the buffer, if it's longer rewrite from beginning
 	[] allow to go back in time
@@ -60,7 +64,7 @@
 	[] special mode 2 (password ninja)
 
 ### KNOWN BUGS:
-- Ufo's hitbox is poor
+- Ufo's hitbox is poor, improve it
 
 ### HISTORY
     

@@ -9,6 +9,7 @@ sfxPlayerHit.volume = 0.5;
 var sfxGodProtection = new Audio();
 var sfxEnemyFire = new Audio();
 var sfxEnemyHit = new Audio();
+var sfxBlastAll = new Audio();
 sfxEnemyHit.volume = 0.2;
 var sfxGameStart = new Audio();
 var sfxShotLeft = new Audio();
@@ -39,7 +40,8 @@ function loadSounds() {
 		{ varName: sfxGameStart, theFile: "gameStart.wav" },
 		{ varName: sfxShotLeft, theFile: "shotLeft.wav" },
 		{ varName: sfxUfoHit, theFile: "ufoHit.wav" },
-		{ varName: sfxUfoSpawned, theFile: "ufoSpawned2.wav" }
+		{ varName: sfxUfoSpawned, theFile: "ufoSpawned2.wav" },
+		{ varName: sfxBlastAll, theFile: "blastAll.wav" }
 	];
 
 	sfxToLoad = soundList.length;

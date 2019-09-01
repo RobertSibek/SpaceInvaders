@@ -48,40 +48,168 @@ const KEY_NUMBER_7 = 55;
 const KEY_NUMBER_8 = 56;
 const KEY_NUMBER_9 = 57;
 
+var keyHeld_Left = false;
+var keyHeld_Right = false;
 
 function initInput() {
 	document.addEventListener("keydown", keyPressed);
 	document.addEventListener("keyup", keyReleased);
-	
-	p1.setupControls(KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW);
-	p2.setupControls(KEY_LETTER_W, KEY_LETTER_S, KEY_LETTER_A, KEY_LETTER_D);	
+//	p1.setupControls(KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW);
 }
 
 function keyPressed(evt) {
-//	console.log(evt.keyCode);
-	setKeyHoldState(evt.keyCode, p1, true);
-	setKeyHoldState(evt.keyCode, p2, true);
+	if (showKeyCodes) {
+		showMessage(1,'Pressed key with code ' + evt.keyCode);
+	}
+	if (evt.keyCode == KEY_BACKSPACE) {
+		showKeyCodes = !showKeyCodes;
+		showMessage(3, 'Show keyCodes ' + (showKeyCodes ? 'enabled' : 'disabled'));
+	}
+	if (evt.keyCode == KEY_LEFT) {
+		keyHeld_Left = true;
+	}
+	if (evt.keyCode == KEY_RIGHT) {
+		keyHeld_Right = true;
+	}
+	if (evt.keyCode == KEY_SPACEBAR) {
+		playerShootIfReloaded();
+	}
+	if (evt.keyCode == KEY_TAB) {
+		requestNextFrame = true;
+	}
+	if (evt.keyCode == KEY_LETTER_A) {
+		letterSequence = 'a';
+		showMessage(1,'letterSequence = ' + letterSequence);
+	}
+	if (evt.keyCode == KEY_LETTER_N) {
+		letterSequence += 'n';
+		showMessage(1,'letterSequence = ' + letterSequence);
+	}
+	if (evt.keyCode == KEY_LETTER_O) {
+		letterSequence += 'o';
+		showMessage(1,'letterSequence = ' + letterSequence);
+	}
+	if (evt.keyCode == KEY_LETTER_G) {
+		if (godModeEnabled) {
+			godModeEnabled = false;
+			showMessage(3, 'God mode disabled');
+
+		} else {
+			godModeEnabled = true;
+			showMessage(3, 'God mode enabled');
+		}
+	}
+	if (evt.keyCode == KEY_LETTER_S) {
+		if (soundEnabled) {
+			soundEnabled = false;
+			showMessage(3,'Sound effects disabled');
+		} else {
+			soundEnabled = true;
+			showMessage(3,'Sound effects enabled');
+		}
+	}
+	if (evt.keyCode == KEY_LETTER_K) {
+		if (godModeEnabled) {
+			blastAllAliens();
+		}
+	}
+	if (evt.keyCode == KEY_NUMBER_1) {
+		player.changeShip(imgSpaceship1, imgPlayerShot);
+	}
+	if (evt.keyCode == KEY_NUMBER_2) {
+		player.changeShip(imgSpaceship2, imgEnemyShot);
+	}
+	if (evt.keyCode == KEY_NUMBER_3) {
+		player.changeShip(imgSpaceship3, imgPlayerShot);
+	}
+	if (evt.keyCode == KEY_NUMBER_4) {
+		player.changeShip(imgSpaceship4, imgPlayerShot);
+	}
+	// Reset to default settings
+	if (evt.keyCode == KEY_LETTER_R) {
+		showMessage(3,'Reset to default');
+		andrejMode = false;
+		letterSequence = '';
+	}
+	if (evt.keyCode == KEY_LETTER_P) {
+		if (gameState == GAME_STATE_PLAY) {
+			gameState = GAME_STATE_PAUSE;
+			ufo.canBeSpawned = false;
+			showMessage(3,'Game paused');
+		} else {
+			gameState = GAME_STATE_PLAY;
+			ufo.canBeSpawned = true;
+			showMessage(3,'Game resumed');
+		}
+	}
+	if (evt.keyCode == KEY_LETTER_D) {
+		console.log('Debug mode ' + (debugEnabled ? 'OFF' : 'ON'));
+		debugEnabled = !debugEnabled;
+	}
+	if (evt.keyCode == KEY_LESS_THAN) {
+		starfield.addLayer();
+	}
+	if (evt.keyCode == KEY_GREATER_THAN) {
+		starfield.removeLayer();
+	}
+
+	// fix the out of bounds behaviour
+	if (evt.keyCode == KEY_LEFT_BRACKET) {
+		var pow = starfield.setPower(-1);
+		message.push('Starfield power = ' + pow);
+	}
+	if (evt.keyCode == KEY_RIGHT_BRACKET) {
+		var pow = starfield.setPower(1);
+		message.push('Starfield power = ' + pow);
+	}
+	if (evt.keyCode == KEY_LETTER_L) {
+		var dynLayers = starfield.switchDynamicLayers();
+		message.push('Starfield dynamic layers ' + (dynLayers ? 'enabled' : 'disabled'));
+	}
+	if (evt.keyCode == KEY_LETTER_H) {
+		showMessage(1, '--- CONTROLS ---');
+		showMessage(1,'1-4 - change player\'s ship');
+		showMessage(1,'d - debug mode');
+		showMessage(1,'r - reset settings');
+		showMessage(1,)
+		showMessage(1,'p - pause game');
+		showMessage(1,'h - help');
+		showMessage(1,'[,] - adjust star power');
+		showMessage(1,'<,> - add/remove starfield layer');
+		showMessage(1,'TAB - request next frame in pause mode');
+	}
+	if (letterSequence == 'ano') {
+		if (!andrejMode) {
+			showMessage(1,'WARNING: ANDREJ MODE ACTIVATED');
+			andrejMode = true;
+		}
+	}
 	evt.preventDefault();
 }
 
 function keyReleased(evt) {
-	setKeyHoldState(evt.keyCode, p1, false);
-	setKeyHoldState(evt.keyCode, p2, false);
+	if (evt.keyCode == KEY_LEFT) {
+		keyHeld_Left = false;
+	}
+	if (evt.keyCode == KEY_RIGHT) {
+		keyHeld_Right = false;
+	}
+	evt.preventDefault();
 }
 
-function setKeyHoldState(thisKey, thisCar, setTo) {
+function setKeyHoldState(thisKey, thisPlayer, setTo) {
 	switch (thisKey) {
-		case thisCar.controlKeyForGas:
-			thisCar.keyHeld_Gas = setTo;
+		case thisPlayer.controlKeyForGas:
+			thisPlayer.keyHeld_Gas = setTo;
 			break;
-		case thisCar.controlKeyForReverse:
-			thisCar.keyHeld_Reverse = setTo;
+		case thisPlayer.controlKeyForReverse:
+			thisPlayer.keyHeld_Reverse = setTo;
 			break;
-		case thisCar.controlKeyForTurnLeft:
-			thisCar.keyHeld_TurnLeft = setTo;
+		case thisPlayer.controlKeyForTurnLeft:
+			thisPlayer.keyHeld_TurnLeft = setTo;
 			break;
-		case thisCar.controlKeyForTurnRight:
-			thisCar.keyHeld_TurnRight = setTo;
+		case thisPlayer.controlKeyForTurnRight:
+			thisPlayer.keyHeld_TurnRight = setTo;
 			break;
 		default:
 			break;
