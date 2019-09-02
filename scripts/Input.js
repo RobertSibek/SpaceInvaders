@@ -89,6 +89,9 @@ function keyPressed(evt) {
 		letterSequence += 'o';
 		showMessage(1,'letterSequence = ' + letterSequence);
 	}
+	if (evt.keyCode == KEY_LETTER_F) {
+		fpsCounter.isVisible = !fpsCounter.isVisible;
+	}
 	if (evt.keyCode == KEY_LETTER_G) {
 		if (godModeEnabled) {
 			godModeEnabled = false;

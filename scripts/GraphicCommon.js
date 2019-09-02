@@ -15,7 +15,10 @@ var FRAMES_PER_SECOND = 60;
 
 var canvas;
 var ctx;
-var framesPerSecond = 30;
+//var framesPerSecond = 30;
+var prevFont;
+var prevAlign;
+var prevFillStyle;
 
 // Dynamically create canvas element
 function createCanvas() {
@@ -55,11 +58,25 @@ function drawText(x, y, text) {
 	ctx.fillText(text, x, y);
 }
 
+function saveFontSettings() {
+	prevFont = ctx.font;
+	prevAlign = ctx.textAlign;
+	prevFillStyle = ctx.fillStyle;
+}
+
+function resumeFontSettings() {
+	ctx.font = prevFont;
+	ctx.textAlign = prevAlign;
+	ctx.fillStyle = prevFillStyle;
+}
+
 function customText(x, y, text, color, font, align) {
+	saveFontSettings();
 	ctx.font = font;
 	ctx.fillStyle = color;
 	ctx.textAlign = align;
 	ctx.fillText(text, x, y);
+	resumeFontSettings();
 }
 
 function drawText(x, y, text, color) {

@@ -46,6 +46,7 @@ var ufo = new ufoClass();
 var starfield = new starfieldClass();
 var message = new messageClass();
 var player = new playerClass();
+var fpsCounter = new fpsCounterClass();
 
 // GAME SETTINGS
 var debugEnabled = false;
@@ -56,8 +57,10 @@ var playerScore = 0;
 var currentWave = 1;
 var godModeEnabled = false;
 var sfxLoadComplete = false;
-var currentFrame; // counts how many times spent in the main game loop
+var currentFrame = 0; // counts how many times spent in the main game loop
+//var secondsFromGameStart = 0;
 var requestNextFrame = false; // if paused, this will request next frame while staying in pause
+//var displayFps = false;
 
 var alienPics = [];
 var alienType = 0;
@@ -99,14 +102,20 @@ function initAll() {
 	starfield.init();
 	ufo.init(imgUfo);
 	message.init();
+	fpsCounter.init();
 }
 
 function loadingDoneSoStartGame() {
 	if (sfxLoadComplete) {
 		setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
+		setInterval(countFps, 1000 / 10);
 		initAll();
 		resetGame();
 	}
+}
+
+function countFps() {
+	fpsCounter.tick();
 }
 
 function debugText(text) {
@@ -128,7 +137,7 @@ function resetGame() {
 	player.reset();
 	ufo.reset();
 	starfield.reset();
-	currentFrame = 0;
+//	currentFrame = 0;
 }
 
 function endGame() {
@@ -169,6 +178,7 @@ function drawEverything() {
 			player.draw();
 			// draw retro TV frame
 			ctx.drawImage(imgBgFrame, 0, 0);
+			fpsCounter.draw();
 			break;
 		default:
 			break;
