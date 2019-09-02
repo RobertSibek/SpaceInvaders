@@ -80,5 +80,6 @@
 - retro tv frame added
 - enhanced background
 - major messages now visible on screen (not just in console)
+- code refactored
 
 
