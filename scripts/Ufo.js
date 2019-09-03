@@ -10,12 +10,17 @@ function ufoClass() {
 	this.init = function (whichImg) {
 		debugText('Ufo initialized');
 		this.img = whichImg;
-		this.width = this.img.width;
+		this.totalFrames = 6;
+		this.width = this.img.width / this.totalFrames;
 		this.height = this.img.height;
 		this.points = UFO_SCORE;
 		this.y = UFO_Y;
 		this.currentFrame = 0;
+		this.nextFrame = 0;
 		this.canBeSpawned = true;
+		this.spriteIndex = 0;
+		this.delay = 100;
+		this.showHitbox = false;
 		this.reset();
 	}
 
@@ -23,10 +28,10 @@ function ufoClass() {
 		this.isActive = false;
 		// set starting position to left or right side
 		if (Math.random() > 0.5) {
-			this.x = CANVAS_WIDTH - this.img.width;
+			this.x = CANVAS_WIDTH - this.width;
 			this.direction = -1;
 		} else {
-			this.x = this.img.width;
+			this.x = this.width;
 			this.direction = 1;
 		}
 		this.nextTimeToSpawn = this.getNextUfoArrivalTime();
@@ -44,6 +49,16 @@ function ufoClass() {
 	}
 
 	this.move = function () {
+		this.currentFrame++;
+		if (this.currentFrame > this.nextFrame) {
+			if (this.spriteIndex < this.totalFrames - 1) {
+				this.spriteIndex++;
+			} else {
+				this.spriteIndex = 0;
+			}
+			this.nextFrame = this.currentFrame + this.delay * FRAMES_PER_SECOND / 1000;
+		}
+
 		if (this.isActive) {
 			this.x += MOVE_SPEED * this.direction;
 
@@ -54,21 +69,21 @@ function ufoClass() {
 	}
 
 	this.draw = function () {
-		this.currentFrame++;
 		if (this.isActive) {
-			ctx.drawImage(this.img, this.x, this.y);
-//			this.drawHitBox();
+			ctx.drawImage(this.img, this.spriteIndex * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+			this.drawHitBox();
 		} else {
 			if (this.currentFrame >= this.nextTimeToSpawn &&
-			    this.canBeSpawned) {
+				this.canBeSpawned) {
 				this.spawn();
 			}
 		}
 	}
-	
+
 	this.drawHitBox = function () {
-		drawOutlineRect(this.x, this.y, this.width, this.height, 'blue');
-		
+		if (this.showHitbox) {
+			drawOutlineRect(this.x, this.y, this.width, this.height, 'blue');
+		}
 	}
 
 	this.getNextUfoArrivalTime = function () {
@@ -76,8 +91,4 @@ function ufoClass() {
 		debugText('ufoClass: Next UFO arrival time in ' + nextArrival + ' seconds');
 		return (this.currentFrame + nextArrival * FRAMES_PER_SECOND);
 	}
-
-
-
-
 }

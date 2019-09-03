@@ -40,8 +40,8 @@
 	[x] show lives left in screen top
 [x] add UFO as class (hell YEAH!)
 [x] add playerScore
-[] make ufo animated from spritesheet
-	[] create ufo animation in blender
+[x] make ufo animated from spritesheet
+	[x] create ufo animation in blender
 [] create player class (2)
 	[x] create player class
 	[x] allow to setup spaceship image
@@ -60,8 +60,8 @@
 	[] store each frame in the buffer, if it's longer rewrite from beginning
 	[] allow to go back in time
 [] add easter eggs (5)
-	[] babis mode 1 (password ano)
-	[] special mode 2 (password ninja)
+	[] special mode 1 (password ?)
+	[] special mode 2 (password ?)
 
 ### KNOWN BUGS:
 - Ufo's hitbox is poor, improve it
@@ -81,5 +81,7 @@
 - enhanced background
 - major messages now visible on screen (not just in console)
 - code refactored
+- UFO is now animated
+- aliens and ufo images are now using spritesheets
 
 

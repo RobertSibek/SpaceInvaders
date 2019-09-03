@@ -40,7 +40,7 @@ function loadSounds() {
 		{ varName: sfxGameStart, theFile: "gameStart.wav" },
 		{ varName: sfxShotLeft, theFile: "shotLeft.wav" },
 		{ varName: sfxUfoHit, theFile: "ufoHit.wav" },
-		{ varName: sfxUfoSpawned, theFile: "ufoSpawned2.wav" },
+		{ varName: sfxUfoSpawned, theFile: "ufoSpawned.wav" },
 		{ varName: sfxBlastAll, theFile: "blastAll.wav" }
 	];
 
@@ -57,6 +57,8 @@ function beginLoadingSound(sfxVar, fileName) {
 
 function playSound(sfx) {
 	if (soundEnabled) {
-		sfx.play();		
+		sfx.play().catch(function() {
+    		// do something
+		});	
 	}
 }

@@ -92,6 +92,10 @@ function keyPressed(evt) {
 	if (evt.keyCode == KEY_LETTER_F) {
 		fpsCounter.isVisible = !fpsCounter.isVisible;
 	}
+	if (evt.keyCode == KEY_LETTER_W) {
+		useSpriteSheet = !useSpriteSheet;
+		showMessage(3, useSpriteSheet ? 'Using spritesheet' : 'Using array of images');
+	}
 	if (evt.keyCode == KEY_LETTER_G) {
 		if (godModeEnabled) {
 			godModeEnabled = false;

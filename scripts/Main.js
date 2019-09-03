@@ -24,10 +24,12 @@ const ENEMY_SHOT_SPEED = 3;
 const MAX_ALIENS_IN_ROW = 15;
 const ALIEN_COLS = 15;
 const ALIEN_ROWS = 5;
-const ALIEN_W = 46;
-const ALIEN_H = 36;
-const ALIEN_SPACING_W = 10;
-const ALIEN_SPACING_H = 5;
+const ALIEN_W = 39; // originally 46
+const ALIEN_H = 32; // originally 36
+const TOTAL_ALIEN_SPRITES = 12;
+
+const ALIEN_SPACING_W = 5;
+const ALIEN_SPACING_H = 2;
 const SWARM_ADVANCE_JUMP = 5;
 const ALIEN_COUNT_BOOST_THRESHOLD = 30; // fewer than this, they speed up
 const ALIEN_BOOST_MULT = 0.1; // higher means faster when few aliens left
@@ -58,11 +60,8 @@ var currentWave = 1;
 var godModeEnabled = false;
 var sfxLoadComplete = false;
 var currentFrame = 0; // counts how many times spent in the main game loop
-//var secondsFromGameStart = 0;
 var requestNextFrame = false; // if paused, this will request next frame while staying in pause
-//var displayFps = false;
 
-var alienPics = [];
 var alienType = 0;
 
 // variables related to the aliens moving as a group, depends on which are alive
@@ -83,6 +82,15 @@ var enemyShotIsActive = false;
 var letterSequence = '';
 var andrejMode = false;
 var tomioMode = false;
+
+window.requestAnimFrame = (function () {
+	return window.requestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		function (mainGame) {
+			window.setTimeout(mainGame, 1000 / FRAMES_PER_SECOND);
+		};
+})();
 
 window.onload = function () {
 	loadSounds();
@@ -107,12 +115,22 @@ function initAll() {
 
 function loadingDoneSoStartGame() {
 	if (sfxLoadComplete) {
-		setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
+		window.requestAnimationFrame(mainGame);
+		//		setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
 		setInterval(countFps, 1000 / 10);
 		initAll();
 		resetGame();
 	}
 }
+
+// *** MAIN GAME LOOP ***
+function mainGame() {
+	window.requestAnimationFrame(mainGame);
+	currentFrame++;
+	moveEverything();
+	drawEverything();
+}
+// *** END OF MAIN GAME LOOP ***
 
 function countFps() {
 	fpsCounter.tick();
@@ -124,20 +142,12 @@ function debugText(text) {
 	}
 }
 
-// *** MAIN GAME LOOP ***
-function mainGame() {
-	currentFrame++;
-	moveEverything();
-	drawEverything();
-}
-// *** END OF MAIN GAME LOOP ***
-
 function resetGame() {
 	resetAliens();
 	player.reset();
 	ufo.reset();
 	starfield.reset();
-//	currentFrame = 0;
+	//	currentFrame = 0;
 }
 
 function endGame() {
@@ -162,7 +172,7 @@ function drawEverything() {
 		case GAME_STATE_PLAY:
 		case GAME_STATE_PAUSE:
 			ctx.fillStyle = 'black';
-			// clear canvs with black
+			// clear canvas with black
 			colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
 			// draw faded clouds (can be changed with waves)
 			ctx.globalAlpha = 0.3;
@@ -401,25 +411,27 @@ function drawShots() {
 }
 
 function drawAliens() {
-	var alienPicType = alienType * 3;
+	var alienSpriteIndex = alienType * 3;
 	for (var eachRow = 0; eachRow < ALIEN_ROWS; eachRow++) {
 		for (var eachCol = 0; eachCol < ALIEN_COLS; eachCol++) {
 			if (isAlienAtTileCoord(eachCol, eachRow)) {
 				var alienLeftEdgeX = eachCol * ALIEN_W + swarmOffsetX;
 				var alienTopEdgeY = eachRow * ALIEN_H + swarmOffsetY;
-				ctx.drawImage(alienPics[alienPicType],
-					alienLeftEdgeX,
-					alienTopEdgeY,
+				// new render method using spritesheet
+				ctx.drawImage(imgAliens,
+					alienSpriteIndex * ALIEN_W, 0, // source x, source y
+					ALIEN_W, ALIEN_H, // frame width, height
+					alienLeftEdgeX, // destination x
+					alienTopEdgeY, // destination y
 					ALIEN_W - ALIEN_SPACING_W,
-					ALIEN_H - ALIEN_SPACING_H,
-				);
+					ALIEN_H - ALIEN_SPACING_H);
 			}
 		}
 		// change alien type for next row
-		if (alienPicType < alienPics.length - ALIEN_ROWS) {
-			alienPicType++;
+		if (alienSpriteIndex < TOTAL_ALIEN_SPRITES - ALIEN_ROWS) {
+			alienSpriteIndex++;
 		} else {
-			alienPicType = 0;
+			alienSpriteIndex = 0;
 		}
 	}
 }

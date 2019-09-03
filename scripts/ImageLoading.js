@@ -1,31 +1,47 @@
 /* ImageLoading.js - handling loading images */
 
 const PATH_IMG = 'images/';
-const ALIEN1A = 0;
-const ALIEN2A = 1;
-const ALIEN3A = 2;
-const ALIEN1B = 3;
-const ALIEN2B = 4;
-const ALIEN3B = 5;
-const ALIEN1C = 6;
-const ALIEN2C = 7;
-const ALIEN3C = 8;
-const ALIEN1D = 9;
-const ALIEN2D = 10;
-const ALIEN3D = 11;
 
-var imgSpaceship1 = document.createElement('img');
-var imgSpaceship2 = document.createElement('img');
-var imgSpaceship3 = document.createElement('img');
-var imgSpaceship4 = document.createElement('img');
+var imgSpaceship1 = new Image();
+var imgSpaceship2 = new Image();
+var imgSpaceship3 = new Image();
+var imgSpaceship4 = new Image();
 //var imgPlayer = document.createElement('img');
-var imgPlayerShot = document.createElement('img');
-var imgEnemyShot = document.createElement('img');
-var imgUfo = document.createElement('img');
-var imgBg = document.createElement('img');
-var imgBgFrame = document.createElement('img');
+var imgPlayerShot = new Image();
+var imgEnemyShot = new Image();
+var imgUfo = new Image();
+var imgBg = new Image();
+var imgBgFrame = new Image();
+var imgAliens = new Image();
 var picsLoaded = 0;
 var picsToLoad = 0;
+
+var images = {};
+
+loadImage("playerSpaceship1Scaled.png");
+loadImage("playerSpaceship2Scaled.png");
+loadImage("playerSpaceship3Scaled.png");
+
+function loadImage(name) {
+
+  images[name] = new Image();
+  images[name].onload = function() { 
+      resourceLoaded();
+  }
+  images[name].src = PATH_IMG + name;
+}
+
+var totalResources = 3;
+var numResourcesLoaded = 0;
+var fps = 30;
+
+function resourceLoaded() {
+
+  numResourcesLoaded += 1;
+  if(numResourcesLoaded === totalResources) {
+    console.log('IMAGE LOADING DONE');
+  }
+}
 
 
 function countLoadedImageAndLaunchIfReady() {
@@ -46,39 +62,18 @@ function loadImages() {
 		{ varName: imgSpaceship4, theFile: "playerSpaceship4Scaled.png" },
 		{ varName: imgPlayerShot, theFile: "playerShot.png" },
 		{ varName: imgEnemyShot, theFile: "enemyShot.png" },
-		{ varName: imgUfo, theFile: "ufo.png" },
+		{ varName: imgUfo, theFile: "ufoSpritesheet.png" },
 		{ varName: imgBg, theFile: "cloudBackground.png" },
 		{ varName: imgBgFrame, theFile: "bgFrame.png" },
-		
-		{ alienType: ALIEN1A, theFile: "alien1a.png" },
-		{ alienType: ALIEN2A, theFile: "alien2a.png" },
-		{ alienType: ALIEN3A, theFile: "alien3a.png" },
-		{ alienType: ALIEN1B, theFile: "alien1b.png" },
-		{ alienType: ALIEN2B, theFile: "alien2b.png" },
-		{ alienType: ALIEN3B, theFile: "alien3b.png" },
-		{ alienType: ALIEN1C, theFile: "alien1c.png" },
-		{ alienType: ALIEN2C, theFile: "alien2c.png" },
-		{ alienType: ALIEN3C, theFile: "alien3c.png" },
-		{ alienType: ALIEN1D, theFile: "alien1d.png" },
-		{ alienType: ALIEN2D, theFile: "alien2d.png" },
-		{ alienType: ALIEN3D, theFile: "alien3d.png" }
+		{ varName: imgAliens, theFile: "alienSpritesheet.png"}
 	];
 
 	picsToLoad = imageList.length;
 	for (var i = 0; i < picsToLoad; i++) {
-		if (imageList[i].alienType != undefined) {
-			// here we handle alien images
-			loadImageForAlien(imageList[i].alienType, imageList[i].theFile);
-		} else {
-			// This is the player's image
+		{
 			beginLoadingImage(imageList[i].varName, imageList[i].theFile);
 		}
 	}
-}
-
-function loadImageForAlien(alienCode, fileName) {
-	alienPics[alienCode] = document.createElement("img");
-	beginLoadingImage(alienPics[alienCode], fileName);
 }
 
 function beginLoadingImage(imgVar, fileName) {
