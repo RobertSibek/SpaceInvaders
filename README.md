@@ -3,15 +3,27 @@
 ## Version 1.1.0
 ## Created by Robert Sibek, Bad Mug Games
 
+### CONTROLS
+LEFT ARROW, RIGHT ARROW     Player movement
+SPACEBAR                    Fire				
+1 2 3                       Change player's ship 		
+S                           Sound On/Off
+P                           Pause game
+T                           Screenshot mode
+F                           Show Fps
+L                           Enable Dynamic Starfield
+[ ]                         Starfield Brightness
+< >                         Add/Remove starfield layer
+
+
 ### TODOS
-[] publish game on itch.io
+[x] publish game on itch.io
 [x] CLEAN THE MESS! (refactor, refactor, refactor) (1)
 [] improve advancing to new wave
 	[] display animated text in the screen center
 	[] animate new alien swarm arrival (short delay between showing them left to right?)
-[] allow changing FPS (for perf. tuning) (2)
-[] change horizontal speed of starfield based on player's movement
-[] destroy player when aliens are below critical level
+[] destroy player when aliens are below critical level (1)
+[] animate player's leaving the screen after clearing wave
 [x] show major messages on the screen instead in debug (eg. sfx on/off)
 [] separate alien scoring for each row ("frontmen" are cheaper :-)
 [x] download/create retro game machine frame 

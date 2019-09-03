@@ -2,25 +2,18 @@
 
 const PL_MOVE_SPEED = 10;
 const PL_SHOT_SPEED = 15;
-const PL_SHIP_IMAGE = imgSpaceship4;
-const PL_SHOT_IMAGE = imgPlayerShot;
 const PL_SHIP_OFFSET = 20;
 
 function playerClass() {
 
-	this.init = function () {
+	this.init = function (shipImg, shotImg) {
 		this.x = CX;
 		this.nextX = this.x;
-		this.ship = PL_SHIP_IMAGE;
-		this.shot = PL_SHOT_IMAGE;
+		this.ship = shipImg;
+		this.shot = shotImg;
 		this.y = CANVAS_HEIGHT - this.ship.height - PL_SHIP_OFFSET;
 		this.lifes = 3;
 		this.shotSpeed = PL_SHOT_SPEED;
-	}
-
-	this.reset = function () {
-//		this.x = CX;
-//		this.nextX = this.x;
 	}
 
 	this.changeShip = function (newShip, newShot) {

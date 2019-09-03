@@ -77,30 +77,13 @@ function keyPressed(evt) {
 	if (evt.keyCode == KEY_TAB) {
 		requestNextFrame = true;
 	}
-	if (evt.keyCode == KEY_LETTER_A) {
-		letterSequence = 'a';
-		showMessage(1,'letterSequence = ' + letterSequence);
-	}
-	if (evt.keyCode == KEY_LETTER_N) {
-		letterSequence += 'n';
-		showMessage(1,'letterSequence = ' + letterSequence);
-	}
-	if (evt.keyCode == KEY_LETTER_O) {
-		letterSequence += 'o';
-		showMessage(1,'letterSequence = ' + letterSequence);
-	}
 	if (evt.keyCode == KEY_LETTER_F) {
 		fpsCounter.isVisible = !fpsCounter.isVisible;
-	}
-	if (evt.keyCode == KEY_LETTER_W) {
-		useSpriteSheet = !useSpriteSheet;
-		showMessage(3, useSpriteSheet ? 'Using spritesheet' : 'Using array of images');
 	}
 	if (evt.keyCode == KEY_LETTER_G) {
 		if (godModeEnabled) {
 			godModeEnabled = false;
 			showMessage(3, 'God mode disabled');
-
 		} else {
 			godModeEnabled = true;
 			showMessage(3, 'God mode enabled');
@@ -121,22 +104,17 @@ function keyPressed(evt) {
 		}
 	}
 	if (evt.keyCode == KEY_NUMBER_1) {
-		player.changeShip(imgSpaceship1, imgPlayerShot);
+		player.changeShip(images["spaceship1"], images["playershot"]);
 	}
 	if (evt.keyCode == KEY_NUMBER_2) {
-		player.changeShip(imgSpaceship2, imgEnemyShot);
+		player.changeShip(images["spaceship2"], images["playershot"]);
 	}
-	if (evt.keyCode == KEY_NUMBER_3) {
-		player.changeShip(imgSpaceship3, imgPlayerShot);
-	}
-	if (evt.keyCode == KEY_NUMBER_4) {
-		player.changeShip(imgSpaceship4, imgPlayerShot);
+	if (evt.keyCode == KEY_NUMBER_3) {		
+		player.changeShip(images["spaceship3"], images["playershot"]);		
 	}
 	// Reset to default settings
 	if (evt.keyCode == KEY_LETTER_R) {
 		showMessage(3,'Reset to default');
-		andrejMode = false;
-		letterSequence = '';
 	}	
 	if (evt.keyCode == KEY_LETTER_T) {
 		if (gameState == GAME_STATE_PLAY) {
@@ -170,7 +148,6 @@ function keyPressed(evt) {
 	if (evt.keyCode == KEY_GREATER_THAN) {
 		starfield.removeLayer();
 	}
-
 	// fix the out of bounds behaviour
 	if (evt.keyCode == KEY_LEFT_BRACKET) {
 		var pow = starfield.setPower(-1);
@@ -183,24 +160,6 @@ function keyPressed(evt) {
 	if (evt.keyCode == KEY_LETTER_L) {
 		var dynLayers = starfield.switchDynamicLayers();
 		message.push('Starfield dynamic layers ' + (dynLayers ? 'enabled' : 'disabled'));
-	}
-	if (evt.keyCode == KEY_LETTER_H) {
-		showMessage(1, '--- CONTROLS ---');
-		showMessage(1,'1-4 - change player\'s ship');
-		showMessage(1,'d - debug mode');
-		showMessage(1,'r - reset settings');
-		showMessage(1,)
-		showMessage(1,'p - pause game');
-		showMessage(1,'h - help');
-		showMessage(1,'[,] - adjust star power');
-		showMessage(1,'<,> - add/remove starfield layer');
-		showMessage(1,'TAB - request next frame in pause mode');
-	}
-	if (letterSequence == 'ano') {
-		if (!andrejMode) {
-			showMessage(1,'WARNING: ANDREJ MODE ACTIVATED');
-			andrejMode = true;
-		}
 	}
 	evt.preventDefault();
 }

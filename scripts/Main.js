@@ -19,6 +19,9 @@ const HEADER_DIST_FROM_LEFT_EDGE = 55; // it's obvious
 const HEADER_DIST_FROM_RIGHT_EDGE = 150; // same here
 const DISPLAY_TOP = HEADER_BG_HEIGHT; // minimum drawing Y distance from the top
 
+// GAME SETTINGS
+const COUNT_FPS_TICK = 10;
+
 // ENEMY SETTINGS
 const ENEMY_SHOT_SPEED = 3;
 const MAX_ALIENS_IN_ROW = 15;
@@ -27,7 +30,6 @@ const ALIEN_ROWS = 5;
 const ALIEN_W = 39; // originally 46
 const ALIEN_H = 32; // originally 36
 const TOTAL_ALIEN_SPRITES = 12;
-
 const ALIEN_SPACING_W = 5;
 const ALIEN_SPACING_H = 2;
 const SWARM_ADVANCE_JUMP = 5;
@@ -106,9 +108,9 @@ function sfxLoadingDone() {
 
 function initAll() {
 	initInput();
-	player.init();
+	player.init(images["spaceship3"], images["playershot"]);
 	starfield.init();
-	ufo.init(imgUfo);
+	ufo.init(images["ufo"]);
 	message.init();
 	fpsCounter.init();
 }
@@ -116,8 +118,7 @@ function initAll() {
 function loadingDoneSoStartGame() {
 	if (sfxLoadComplete) {
 		window.requestAnimationFrame(mainGame);
-		//		setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
-		setInterval(countFps, 1000 / 10);
+		setInterval(countFps, 1000 / COUNT_FPS_TICK);
 		initAll();
 		resetGame();
 	}
@@ -172,13 +173,10 @@ function drawEverything() {
 		case GAME_STATE_PLAY:
 		case GAME_STATE_PAUSE:
 			ctx.fillStyle = 'black';
-			// clear canvas with black
 			colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
-			// draw faded clouds (can be changed with waves)
 			ctx.globalAlpha = 0.3;
-			ctx.drawImage(imgBg, 0, 0);
+			ctx.drawImage(images["background"], 0, 0);
 			ctx.globalAlpha = 1;
-			// draw animated starfield background
 			starfield.draw();
 			drawHeader();
 			drawShots();
@@ -186,8 +184,7 @@ function drawEverything() {
 			ufo.draw();
 			message.draw();
 			player.draw();
-			// draw retro TV frame
-			ctx.drawImage(imgBgFrame, 0, 0);
+			ctx.drawImage(images["tvframe"], 0, 0);
 			fpsCounter.draw();
 			break;
 		default:
@@ -406,7 +403,7 @@ function drawShots() {
 		ctx.drawImage(player.shot, shotX, shotY);
 	}
 	if (enemyShotIsActive) {
-		ctx.drawImage(imgEnemyShot, enemyShotX - 1, enemyShotY - 4);
+		ctx.drawImage(images["enemyshot"], enemyShotX - 1, enemyShotY - 4);
 	}
 }
 
@@ -418,7 +415,7 @@ function drawAliens() {
 				var alienLeftEdgeX = eachCol * ALIEN_W + swarmOffsetX;
 				var alienTopEdgeY = eachRow * ALIEN_H + swarmOffsetY;
 				// new render method using spritesheet
-				ctx.drawImage(imgAliens,
+				ctx.drawImage(images["aliens"],
 					alienSpriteIndex * ALIEN_W, 0, // source x, source y
 					ALIEN_W, ALIEN_H, // frame width, height
 					alienLeftEdgeX, // destination x
