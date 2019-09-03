@@ -137,6 +137,17 @@ function keyPressed(evt) {
 		showMessage(3,'Reset to default');
 		andrejMode = false;
 		letterSequence = '';
+	}	
+	if (evt.keyCode == KEY_LETTER_T) {
+		if (gameState == GAME_STATE_PLAY) {
+			gameState = GAME_STATE_PAUSE;
+			ufo.canBeSpawned = false;
+			showMessage(1,'Game paused');
+		} else {
+			gameState = GAME_STATE_PLAY;
+			ufo.canBeSpawned = true;
+			showMessage(1,'Game resumed');
+		}
 	}
 	if (evt.keyCode == KEY_LETTER_P) {
 		if (gameState == GAME_STATE_PLAY) {

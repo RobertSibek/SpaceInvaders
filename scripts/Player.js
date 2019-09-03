@@ -1,7 +1,7 @@
 // Player.js
 
 const PL_MOVE_SPEED = 10;
-const PL_SHOT_SPEED = 25;
+const PL_SHOT_SPEED = 15;
 const PL_SHIP_IMAGE = imgSpaceship4;
 const PL_SHOT_IMAGE = imgPlayerShot;
 const PL_SHIP_OFFSET = 20;
