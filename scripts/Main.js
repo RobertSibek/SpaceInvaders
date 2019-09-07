@@ -32,9 +32,9 @@ const ALIEN_H = 32; // originally 36
 const TOTAL_ALIEN_SPRITES = 12;
 const ALIEN_SPACING_W = 5;
 const ALIEN_SPACING_H = 2;
-const SWARM_ADVANCE_JUMP = 5;
+const SWARM_ADVANCE_JUMP = ALIEN_H / 2;
 const ALIEN_COUNT_BOOST_THRESHOLD = 30; // fewer than this, they speed up
-const ALIEN_BOOST_MULT = 0.1; // higher means faster when few aliens left
+const ALIEN_BOOST_MULT = 0.15; // higher means faster when few aliens left
 const ALIEN_POINTS = 50;
 
 var alienGrid = new Array(ALIEN_COLS * ALIEN_ROWS);
@@ -144,11 +144,9 @@ function debugText(text) {
 }
 
 function resetGame() {
-	resetAliens();
-	player.reset();
+    resetAliens();
 	ufo.reset();
 	starfield.reset();
-	//	currentFrame = 0;
 }
 
 function endGame() {
@@ -156,6 +154,7 @@ function endGame() {
 	playerScore = 0;
 	player.lifes = 3;
 	alienType = 0;
+    resetGame();
 }
 
 function startNextWave() {
@@ -235,6 +234,13 @@ function alienTileToIndex(tileCol, tileRow) {
 	return (tileCol + ALIEN_COLS * tileRow);
 }
 
+function alienIndexToTile(alienIndex) {
+    return ({
+        tileCol: alienIndex % ALIEN_COLS,
+        tileRow: Math.floor(alienIndex / ALIEN_COLS)
+    })
+}
+
 function isAlienAtTileCoord(alienTileCol, alienTileRow) {
 	var alienIndex = alienTileToIndex(alienTileCol, alienTileRow);
 	return (alienGrid[alienIndex] == 1);
@@ -264,8 +270,8 @@ function pixelOnUfoCheck(whatX, whatY) {
 			return false;
 		}
 
-		if (whatX > ufo.x - ufo.width / 2 &&
-			whatX < ufo.x + ufo.width / 2) {
+		if (whatX > ufo.x &&
+			whatX < ufo.x + ufo.width) {
 			playerScore += ufo.destroy();
 		}
 	}
@@ -362,12 +368,28 @@ function recomputeSwarmGroupWidth() {
 	swarmGroupLowest = (bottomMostRow + 1) * ALIEN_H - ALIEN_SPACING_H;
 }
 
+function getSwarmGroupLowest() {
+	var bottomMostRow = 0;
+	for (var eachCol = 0; eachCol < ALIEN_COLS; eachCol++) { // for all cols...
+		// checking from the bottom edge upward, only care for highest found
+		for (var eachRow = ALIEN_ROWS - 1; eachRow > bottomMostRow; eachRow--) {
+			var alienIndex = alienTileToIndex(eachCol, eachRow);
+			if (alienGrid[alienIndex] == 1) {
+				bottomMostRow = eachRow;
+				break; // found one, quit check this row
+			}
+		}
+	}
+	// used to tell if group is crossing bottom edge of play area
+	swarmGroupLowest = (bottomMostRow + 1) * ALIEN_H - ALIEN_SPACING_H;  
+}
+
 function drawHeader() {
 	//	colorRect(0, 0, CANVAS_WIDTH, HEADER_BG_HEIGHT, CL_HEADER_BG);
 	var w = player.ship.width / 4;
 	var h = player.ship.height / 4;
 	drawText(HEADER_DIST_FROM_LEFT_EDGE, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER, 'left');
-	drawText(CX, HEADER_Y, 'Score: ' + playerScore, CL_HEADER_TEXT, FNT_HEADER, 'center');
+	drawText(CX, HEADER_Y, 'Score: ' + lpad(playerScore,6), CL_HEADER_TEXT, FNT_HEADER, 'center');
 	drawText(CANVAS_WIDTH - HEADER_DIST_FROM_LEFT_EDGE - 6.5 * w, HEADER_Y, 'Lifes: ', CL_HEADER_TEXT, FNT_HEADER, 'left');
 	// draw player's lifes as ships
 	var headerOffsetY = 1;
@@ -407,6 +429,18 @@ function drawShots() {
 	}
 }
 
+//function checkIfAliensCrossedDeadzoneY() {
+//    for (var alienIndex = alienGrid.length; alienIndex >= 0; alienIndex--) {
+//        if (alienGrid[alienIndex] == 1) {
+//            var alienTilePos = alienIndexToTile();
+//            var alienY = alienTilePos.tileRow + swarmGroupLowest
+//            
+//            
+//        }
+//    }
+//       
+//}
+
 function drawAliens() {
 	var alienSpriteIndex = alienType * 3;
 	for (var eachRow = 0; eachRow < ALIEN_ROWS; eachRow++) {
@@ -433,21 +467,29 @@ function drawAliens() {
 	}
 }
 
+
+
 function moveAliens() {
 	swarmOffsetX += swarmMoveDir * swarmLowPopulationSpeedBoost;
 	if (swarmMoveDir > 0) { // rightward
 		if (swarmOffsetX + swarmGroupWidth > canvas.width) { // check right edge
 			swarmMoveDir = -1;
 			swarmOffsetY += SWARM_ADVANCE_JUMP;
+            getSwarmGroupLowest()
 		}
 	}
 
 	if (swarmMoveDir < 0) { // leftward
 		if (swarmOffsetX + swarmGroupLeftMargin < 0) { // check left edge
 			swarmMoveDir = 1;
-			swarmOffsetY += SWARM_ADVANCE_JUMP;
+			swarmOffsetY += SWARM_ADVANCE_JUMP; 
+            getSwarmGroupLowest();
 		}
 	}
+ 
+    if (swarmGroupLowest + swarmOffsetY > player.y) {
+        endGame();
+    }
 }
 
 function moveShots() {
@@ -483,7 +525,6 @@ function enemyInColAbovePlayerAttemptToFire() {
 			enemyShotX = swarmOffsetX + tileCol * ALIEN_W + (ALIEN_W - ALIEN_SPACING_W) * 0.5;
 			enemyShotY = swarmOffsetY + eachRow * ALIEN_H + (ALIEN_H - ALIEN_SPACING_H) * 0.5;
 			enemyShotIsActive = true;
-			sfxEnemyFire.volume = 0.1;
 			playSound(sfxEnemyFire);
 			return; // lowest alien found, no need to keep searching
 		}
@@ -497,9 +538,8 @@ function enemyShotCollisionsCheck() {
 			if (!godModeEnabled) {
 				playSound(sfxPlayerHit);
 				enemyShotIsActive = false;
-				if (player.lifes > 0) {
+				if (player.lifes > 1) {
 					player.lifes--;
-					resetGame();
 				} else {
 					endGame();
 				}

@@ -83,9 +83,11 @@ function keyPressed(evt) {
 	if (evt.keyCode == KEY_LETTER_G) {
 		if (godModeEnabled) {
 			godModeEnabled = false;
+            player.shotSpeed = PL_SHOT_SPEED;
 			showMessage(3, 'God mode disabled');
 		} else {
 			godModeEnabled = true;
+            player.shotSpeed = PL_SHOT_SPEED_BOOST;
 			showMessage(3, 'God mode enabled');
 		}
 	}

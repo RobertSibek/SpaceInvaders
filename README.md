@@ -16,20 +16,14 @@ L                           Enable Dynamic Starfield
 < >                         Add/Remove starfield layer
 
 
-### TODOS
+### GENERAL TODOS
+
 [x] publish game on itch.io
 [x] CLEAN THE MESS! (refactor, refactor, refactor) (1)
-[] improve advancing to new wave
-	[] display animated text in the screen center
-	[] animate new alien swarm arrival (short delay between showing them left to right?)
-[] destroy player when aliens are below critical level (1)
-[] animate player's leaving the screen after clearing wave
 [x] show major messages on the screen instead in debug (eg. sfx on/off)
-[] separate alien scoring for each row ("frontmen" are cheaper :-)
 [x] download/create retro game machine frame 
-[] add god mode for testing (1)
+[x] add god mode for testing (3)
 	[x] player is unaffected by enemy shots
-	[] display shield when player in god mode and get hit by enemy
 	[x] player can blast rest of aliens by pressing K key (this will call the next wave)
 [x] reset alien grid (1)
 	[x] when game starts
@@ -37,12 +31,6 @@ L                           Enable Dynamic Starfield
 	[x] on new wave
 	[x] NOT when player loose one life only
 [] adjust player control to be more precise (2)
-[] add player spaceship energy shields (3)
-	[] show them as five orange rectangles (=====) 
-	[] remove one per hit
-	[] when all depleated, decrease player's lives
-[] add random bonus from blasting UFO (3)
-	[] when Ufo blasted it may or may not drop some powerup (shields refill, power shots etc.)
 [x] add sounds
 	[x] add enemy hit sfx
 	[x] add player hit sfx
@@ -54,31 +42,60 @@ L                           Enable Dynamic Starfield
 [x] add playerScore
 [x] make ufo animated from spritesheet
 	[x] create ufo animation in blender
-[] create player class (2)
+[x] create player class (2)
 	[x] create player class
 	[x] allow to setup spaceship image
 	[x] allow to setup shot image
-	[] allow to setup separate sfx for each ship
+[x] add star field background (parallax vertical scroll in 3 rows)
+[x] shot as image
+
+### VERSION 1.1 RELEASE TODOS
+[x] destroy player when aliens are below critical level (1)
+[] level 100 is the final
+[] tune the difficulty on new pc
+[] add barriers to protect player (as from the original game) (1)
 [] implement difficulty increasing with each wave (2)
-	[] increase points for aliens
+	[] increase points for aliens with each wave
 	[] increase alien movement speed
 	[] increase ufo points
-[x] add star field background (parallax vertical scroll in 3 rows)
-[] intro screen (4)
-[] performance check to adjust speed automatically for slower/faster machines (5)
-[x] shot as image
-[] add rewind time feature (fcf)
-	[] create framebuffer for x-seconds
-	[] store each frame in the buffer, if it's longer rewrite from beginning
-	[] allow to go back in time
-[] add easter eggs (5)
-	[] special mode 1 (password ?)
-	[] special mode 2 (password ?)
+[] rewrite Audio.js similar to LoadImages (2)
+[] show intro screen (2)
+    [] create intro screen
+    [] play intro music
+    [] show BMG logo
+        [] create BMG logo
+    [] display blinking text click to play
+[] show end screen (2)
+    [] show game summary
+        [] show score points in huge font in the centre
+        [] play end music
+        [] show click to menu button
+        [] show play again button
+[] obfuscate .js files and distribute
+[] publish game
+[] distribute game on different channels
+
+### VERSION 1.2 RELEASE TODOS
+[] animate player's leaving the screen after clearing wave (3)
+[] create highres Ufo model
+    [] model Ufo in Blender
+    [] render frames in Blender
+    [] create spritesheet
+    [] update code
+[] add UFO hunt every 5th level
+[] add boss fight, every 10th level
+[] add easter eggs
+    [] load custom alien sprites (eg. your boss, wift, husband, ex, whatever...)
 
 ### KNOWN BUGS:
-- Ufo's hitbox is poor, improve it
+- none
 
 ### HISTORY
+- Original game differences
+    [] each kind of alien is scored differently (30 - top row, 20 - 2xmiddle rows, 10 - 2xfor lowest rows)
+    [] each row is moving independently, slightly ahead the row above
+    [] after destroying alien, there a short sprite swap for blast image
+    [] player's and alien's shot can destroy each other when met
     
 #### version 1.0
 - enhanced graphic
@@ -95,5 +112,6 @@ L                           Enable Dynamic Starfield
 - code refactored
 - UFO is now animated
 - aliens and ufo images are now using spritesheets
+- fixed UFO hitbox
 
 

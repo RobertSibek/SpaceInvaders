@@ -19,7 +19,6 @@ sfxUfoSpawned.volume = 1;
 var sfxLoaded = 0;
 var sfxToLoad = 0;
 
-
 function countLoadedSfxAndLaunchIfReady() {
 	sfxLoaded++;
 	debugText(sfxLoaded + '/' + sfxToLoad + ' sounds loaded');

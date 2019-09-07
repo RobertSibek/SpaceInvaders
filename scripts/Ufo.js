@@ -2,7 +2,7 @@
 const UFO_SCORE = 150;
 const UFO_Y = 40;
 const MOVE_SPEED = 2;
-const MIN_SECONDS_TO_SPAWN = 5;
+const MIN_SECONDS_TO_SPAWN = 4;
 const MAX_SECONDS_TO_SPAWN = 15;
 
 function ufoClass() {
@@ -27,11 +27,11 @@ function ufoClass() {
 	this.reset = function () {
 		this.isActive = false;
 		// set starting position to left or right side
-		if (Math.random() > 0.5) {
-			this.x = CANVAS_WIDTH - this.width;
+		if (getDiceRoll()) {
+			this.x = CANVAS_WIDTH;
 			this.direction = -1;
 		} else {
-			this.x = this.width;
+			this.x = 0;
 			this.direction = 1;
 		}
 		this.nextTimeToSpawn = this.getNextUfoArrivalTime();
