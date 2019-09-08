@@ -1,7 +1,7 @@
 // Player.js
 
 const PL_MOVE_SPEED = 10;
-const PL_SHOT_SPEED = 20;
+const PL_SHOT_SPEED = 10;
 const PL_SHOT_SPEED_BOOST = 30;
 const PL_SHIP_OFFSET = 20;
 
