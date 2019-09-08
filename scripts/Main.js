@@ -21,7 +21,6 @@ const DISPLAY_TOP = HEADER_BG_HEIGHT; // minimum drawing Y distance from the top
 
 // GAME SETTINGS
 const COUNT_FPS_TICK = 10;
-const BARRIER_PIXEL_RES = 10;
 
 // ENEMY SETTINGS
 const ENEMY_SHOT_SPEED = 3;
@@ -52,10 +51,6 @@ var starfield = new starfieldClass();
 var message = new messageClass();
 var player = new playerClass();
 var fpsCounter = new fpsCounterClass();
-var barrier1 = new barrierClass();
-var barrier2 = new barrierClass();
-var barrier3 = new barrierClass();
-var barrier4 = new barrierClass();
 
 // GAME SETTINGS
 var debugEnabled = false;
@@ -118,10 +113,6 @@ function initAll() {
     ufo.init(images["ufo"]);
     message.init();
     fpsCounter.init();
-    barrier1.init(100, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
-    barrier2.init(300, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
-    barrier3.init(500, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
-    barrier4.init(700, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
 }
 
 function loadingDoneSoStartGame() {
@@ -156,10 +147,6 @@ function resetGame() {
     resetAliens();
     ufo.reset();
     starfield.reset();
-    barrier1.reset();
-    barrier2.reset();
-    barrier3.reset();
-    barrier4.reset();
 }
 
 function endGame() {
@@ -191,10 +178,6 @@ function drawEverything() {
             ctx.globalAlpha = 1;
             starfield.draw();
             drawHeader();
-            barrier1.draw();
-            barrier2.draw();
-            barrier3.draw();
-            barrier4.draw();
             drawShots();
             drawAliens();
             ufo.draw();
@@ -264,7 +247,6 @@ function isAlienAtTileCoord(alienTileCol, alienTileRow) {
 }
 
 function playerShotCollisionsCheck() {
-    //    barrier.checkHit(player.shot, shotX, shotY);
     pixelOnAlienCheck(shotX, shotY);
     pixelOnUfoCheck(shotX, shotY);
     if (shotY < DISPLAY_TOP) { // if shot has moved beyond the top edge
@@ -440,34 +422,10 @@ function resetAliens() {
 
 function drawShots() {
     if (shotIsActive) {
-        ctx.drawImage(player.shot, shotX, shotY);
-        if (barrier1.checkHit(shotX, shotY, 1)) {
-            shotIsActive = false;
-        }
-        if (barrier2.checkHit(shotX, shotY, 1)) {
-            shotIsActive = false;
-        }
-        if (barrier3.checkHit(shotX, shotY, 1)) {
-            shotIsActive = false;
-        }
-        if (barrier4.checkHit(shotX, shotY, 1)) {
-            shotIsActive = false;
-        }        
+        ctx.drawImage(player.shot, shotX, shotY);       
     }
     if (enemyShotIsActive) {
-        ctx.drawImage(images["enemyshot"], enemyShotX - 1, enemyShotY - 4);
-        if (barrier1.checkHit(enemyShotX, enemyShotY, 0)) {
-            enemyShotIsActive = false;
-        }
-        if (barrier2.checkHit(enemyShotX, enemyShotY, 0)) {
-            enemyShotIsActive = false;
-        }
-        if (barrier3.checkHit(enemyShotX, enemyShotY, 0)) {
-            enemyShotIsActive = false;
-        }
-        if (barrier4.checkHit(enemyShotX, enemyShotY, 0)) {
-            enemyShotIsActive = false;
-        }        
+        ctx.drawImage(images["enemyshot"], enemyShotX - 1, enemyShotY - 4);      
     }
 }
 
