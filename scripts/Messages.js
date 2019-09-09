@@ -22,7 +22,7 @@ function messageClass() {
 		this.font = MSG_FONT_DEFAULT;
 		this.delay = defaultDelay; // how many ms will message stay on screen
 		this.isActive = false;
-		this.fadingEnabled = false;
+		this.fadingEnabled = true;
 	}
 
 	this.push = function (text) {
