@@ -1,9 +1,9 @@
 // Barriers.js
 
-const BARRIER_RES = 2; // 2px width and height
+const BARRIER_RES = 10; // 10px  width and height
 const BARRIER_COLS = 7;
 const BARRIER_ROWS = 6;
-const BARRIER_COLOR = '#FFBB00';
+const BARRIER_COLOR = '#FFAA00';
 
 const barrierGrid1 = [
     0, 0, 1, 1, 1, 0, 0,
@@ -33,7 +33,6 @@ function barrierClass() {
     }
 
     this.reset = function () {
-        // check how to replace one array with another
         this.barrierGrid = barrierGrid1.slice(0);
     }
 
@@ -49,10 +48,10 @@ function barrierClass() {
     }
 
     this.checkHit = function (shotX, shotY, isFriendly) {
-        // handle player shots
         if (isFriendly) {
+            // handle player shots
             if (shotY >= this.y && shotY <= this.y + BARRIER_ROWS * this.pixelWidth) {
-                if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {                
+                if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {
                     var bTileCol = Math.floor((shotX - this.x) / this.pixelWidth);
                     var bTileRow = Math.floor((shotY - this.y) / this.pixelWidth);
                     var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
@@ -65,16 +64,14 @@ function barrierClass() {
                 }
             }
             return false;
-            // handle enemy shots
         } else {
-            //            var shotY = y;
+            // handle enemy shots            
             if (shotY >= this.y && shotY <= this.y + BARRIER_ROWS * this.pixelWidth) {
                 if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {
-                    var bTileCol = (shotX - this.x) / this.pixelWidth;;
+                    var bTileCol = Math.floor((shotX - this.x) / this.pixelWidth);
                     var bTileRow = Math.floor((shotY - this.y) / this.pixelWidth);
                     var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
                     if (this.barrierGrid[bTileIndex]) {
-                        //                    this.barrierGrid[bTileIndex - BARRIER_COLS] = 0;
                         this.barrierGrid[bTileIndex] = 0;
                         this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
                         return true; // Deactivete shot now
