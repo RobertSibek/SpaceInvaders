@@ -91,6 +91,19 @@ function keyPressed(evt) {
 			showMessage(3, 'God mode enabled');
 		}
 	}
+    if (evt.keyCode == KEY_LETTER_H) {
+        if (showHitBoxes) {
+            showHitBoxes = false;
+            player.showHitbox = false;
+            ufo.showHitbox = false;
+            showMessage(3, 'Show hitboxes disabled');
+        } else {
+            showHitBoxes = true;
+            player.showHitbox = true;
+            ufo.showHitbox = true;            
+            showMessage(3, 'Show hitboxes enabled');
+        }
+    }
 	if (evt.keyCode == KEY_LETTER_S) {
 		if (soundEnabled) {
 			soundEnabled = false;

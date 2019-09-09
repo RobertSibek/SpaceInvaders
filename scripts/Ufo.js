@@ -1,4 +1,5 @@
 // Ufo.js
+
 const UFO_SCORE = 150;
 const UFO_Y = 40;
 const MOVE_SPEED = 2;

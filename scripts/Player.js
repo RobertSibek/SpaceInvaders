@@ -15,6 +15,7 @@ function playerClass() {
 		this.y = CANVAS_HEIGHT - this.ship.height - PL_SHIP_OFFSET;
 		this.lifes = 3;
 		this.shotSpeed = PL_SHOT_SPEED;
+        this.showHitbox = false;
 	}
 
 	this.changeShip = function (newShip, newShot) {
@@ -36,10 +37,16 @@ function playerClass() {
 		} else {
 			this.nextX = this.x;
 		}
-
 	}
+    
+	this.drawHitBox = function () {
+		if (this.showHitbox) {
+			drawOutlineRect(this.x - this.ship.width / 2, this.y, this.ship.width, this.ship.height, 'blue');
+		}
+	}    
 
 	this.draw = function () {
 		ctx.drawImage(this.ship, this.x - this.ship.width / 2, this.y, this.ship.width, this.ship.height);
+        this.drawHitBox();
 	}
 }

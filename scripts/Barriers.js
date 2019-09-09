@@ -24,18 +24,17 @@ const barrierGrid2 = [
 ];
 
 function barrierClass() {
+
     this.init = function (x, y, pixelWidth) {
         this.x = x;
         this.y = y;
-        this.barrierGrid = barrierGrid1;
+        this.barrierGrid = barrierGrid1.slice(0);
         this.pixelWidth = pixelWidth;
     }
 
     this.reset = function () {
         // check how to replace one array with another
-        for (var i = 0; i < this.barrierGrid.length; i++) {
-            this.barrierGrid[i] = barrierGrid1[i];
-        }
+        this.barrierGrid = barrierGrid1.slice(0);
     }
 
     this.draw = function () {
@@ -53,22 +52,22 @@ function barrierClass() {
         // handle player shots
         if (isFriendly) {
             if (shotY >= this.y && shotY <= this.y + BARRIER_ROWS * this.pixelWidth) {
-                if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {
-                    var bTileCol = (shotX - this.x) / this.pixelWidth;;
+                if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {                
+                    var bTileCol = Math.floor((shotX - this.x) / this.pixelWidth);
                     var bTileRow = Math.floor((shotY - this.y) / this.pixelWidth);
                     var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
                     if (this.barrierGrid[bTileIndex]) {
                         this.barrierGrid[bTileIndex - BARRIER_COLS] = 0;
                         this.barrierGrid[bTileIndex] = 0;
-                        //                    this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
+
                         return true; // Deactivete shot now
                     }
                 }
             }
             return false;
-        // handle enemy shots
+            // handle enemy shots
         } else {
-//            var shotY = y;
+            //            var shotY = y;
             if (shotY >= this.y && shotY <= this.y + BARRIER_ROWS * this.pixelWidth) {
                 if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {
                     var bTileCol = (shotX - this.x) / this.pixelWidth;;
