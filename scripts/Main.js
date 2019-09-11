@@ -21,6 +21,7 @@ const DISPLAY_TOP = HEADER_BG_HEIGHT; // minimum drawing Y distance from the top
 
 // GAME SETTINGS
 const COUNT_FPS_TICK = 10;
+const BARRIER_PIXEL_RES = 10;
 
 // ENEMY SETTINGS
 const ENEMY_SHOT_SPEED = 3;
@@ -51,6 +52,10 @@ var starfield = new starfieldClass();
 var message = new messageClass();
 var player = new playerClass();
 var fpsCounter = new fpsCounterClass();
+var barrier1 = new barrierClass();
+var barrier2 = new barrierClass();
+var barrier3 = new barrierClass();
+var barrier4 = new barrierClass();
 
 // GAME SETTINGS
 var debugEnabled = false;
@@ -184,6 +189,7 @@ function drawEverything() {
             drawHeader();
             drawShots();
             drawAliens();
+            barrier1.draw();
             ufo.draw();
             message.draw();
             player.draw();
