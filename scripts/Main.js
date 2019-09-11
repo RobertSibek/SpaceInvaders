@@ -63,7 +63,7 @@ var godModeEnabled = false;
 var sfxLoadComplete = false;
 var currentFrame = 0; // counts how many times spent in the main game loop
 var requestNextFrame = false; // if paused, this will request next frame while staying in pause
-
+var showHitBoxes = false;
 var alienType = 0;
 
 // variables related to the aliens moving as a group, depends on which are alive
@@ -111,8 +111,12 @@ function initAll() {
     player.init(images["spaceship3"], images["playershot"]);
     starfield.init();
     ufo.init(images["ufo"]);
-    message.init();
+    message.init(1000);
     fpsCounter.init();
+    barrier1.init(104, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
+    barrier2.init(278, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
+    barrier3.init(452, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
+    barrier4.init(626, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
 }
 
 function loadingDoneSoStartGame() {
@@ -521,7 +525,7 @@ function enemyInColAbovePlayerAttemptToFire() {
 
 function enemyShotCollisionsCheck() {
     if (enemyShotY >= player.y && enemyShotY <= player.y + player.ship.height) { // vertically over player
-        if (enemyShotX > player.x - player.ship.width && enemyShotX < player.x + player.ship.width) { // horizontally too?
+        if (enemyShotX > player.x - player.ship.width / 2 && enemyShotX < player.x + player.ship.width / 2) { // horizontally too?
             // player has been hit by enemy
             if (!godModeEnabled) {
                 playSound(sfxPlayerHit);

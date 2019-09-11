@@ -15,7 +15,6 @@ var FRAMES_PER_SECOND = 60;
 
 var canvas;
 var ctx;
-//var framesPerSecond = 30;
 var prevFont;
 var prevAlign;
 var prevFillStyle;
@@ -39,12 +38,6 @@ function drawBitmapCenteredAtLocationWithRotation(img, atX, atY, withAngle) {
 	ctx.drawImage(img, -img.width / 2, -img.height / 2);
 	ctx.restore();
 }
-
-// Draw colored rectangle
-function drawRect(x, y, width, height, color) {
-	ctx.fillStyle = color;
-	ctx.fillRect(x, y, width, height);
-} // drawRect()
 
 function drawOutlineRect(x, y, width, height, color) {
 	ctx.strokeStyle = color;

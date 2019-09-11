@@ -12,7 +12,7 @@ const MSG_COLORS = MSG_COLORS2.reverse();
 
 function messageClass() {
 
-	this.init = function () {
+	this.init = function (defaultDelay) {
 		this.x = CX;
 		this.y = CY;
 		this.textAlign = 'center';
@@ -20,7 +20,7 @@ function messageClass() {
 		this.colorIndex = 0;
 		this.color = MSG_COLORS[this.colorIndex];
 		this.font = MSG_FONT_DEFAULT;
-		this.delay = 500; // how many ms will message stay on screen
+		this.delay = defaultDelay; // how many ms will message stay on screen
 		this.isActive = false;
 		this.fadingEnabled = true;
 	}

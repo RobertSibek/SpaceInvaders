@@ -9,8 +9,10 @@ SPACEBAR                    Fire
 1 2 3                       Change player's ship 		
 S                           Sound On/Off
 P                           Pause game
+G                           God mode (faster shots and invicibility)
 T                           Screenshot mode
 F                           Show Fps
+H                           Display Hitboxes (where available)
 L                           Enable Dynamic Starfield
 [ ]                         Starfield Brightness
 < >                         Add/Remove starfield layer
@@ -53,7 +55,7 @@ L                           Enable Dynamic Starfield
 [x] destroy player when aliens are below critical level (1)
 [] level 100 is the final
 [] tune the difficulty on new pc
-[] add barriers to protect player (as from the original game) (1)
+[x] add barriers to protect player (as from the original game) (1)
 [] implement difficulty increasing with each wave (2)
 	[] increase points for aliens with each wave
 	[] increase alien movement speed
@@ -113,5 +115,7 @@ L                           Enable Dynamic Starfield
 - UFO is now animated
 - aliens and ufo images are now using spritesheets
 - fixed UFO hitbox
+- added barriers to protect player's ship
+- changed animation loop from setInterval to requestAnimationFrame (battery saving, more stable performance)
 
 
