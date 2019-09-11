@@ -156,6 +156,10 @@ function resetGame() {
     resetAliens();
     ufo.reset();
     starfield.reset();
+    barrier1.reset();
+    barrier2.reset();
+    barrier3.reset();
+    barrier4.reset();
 }
 
 function endGame() {
@@ -187,9 +191,12 @@ function drawEverything() {
             ctx.globalAlpha = 1;
             starfield.draw();
             drawHeader();
+            barrier1.draw();
+            barrier2.draw();
+            barrier3.draw();
+            barrier4.draw();
             drawShots();
             drawAliens();
-            barrier1.draw();
             ufo.draw();
             message.draw();
             player.draw();
@@ -257,6 +264,7 @@ function isAlienAtTileCoord(alienTileCol, alienTileRow) {
 }
 
 function playerShotCollisionsCheck() {
+    //    barrier.checkHit(player.shot, shotX, shotY);
     pixelOnAlienCheck(shotX, shotY);
     pixelOnUfoCheck(shotX, shotY);
     if (shotY < DISPLAY_TOP) { // if shot has moved beyond the top edge
@@ -432,10 +440,34 @@ function resetAliens() {
 
 function drawShots() {
     if (shotIsActive) {
-        ctx.drawImage(player.shot, shotX, shotY);       
+        ctx.drawImage(player.shot, shotX, shotY);
+        if (barrier1.checkHit(shotX, shotY, 1)) {
+            shotIsActive = false;
+        }
+        if (barrier2.checkHit(shotX, shotY, 1)) {
+            shotIsActive = false;
+        }
+        if (barrier3.checkHit(shotX, shotY, 1)) {
+            shotIsActive = false;
+        }
+        if (barrier4.checkHit(shotX, shotY, 1)) {
+            shotIsActive = false;
+        }        
     }
     if (enemyShotIsActive) {
-        ctx.drawImage(images["enemyshot"], enemyShotX - 1, enemyShotY - 4);      
+        ctx.drawImage(images["enemyshot"], enemyShotX - 1, enemyShotY - 4);
+        if (barrier1.checkHit(enemyShotX, enemyShotY, 0)) {
+            enemyShotIsActive = false;
+        }
+        if (barrier2.checkHit(enemyShotX, enemyShotY, 0)) {
+            enemyShotIsActive = false;
+        }
+        if (barrier3.checkHit(enemyShotX, enemyShotY, 0)) {
+            enemyShotIsActive = false;
+        }
+        if (barrier4.checkHit(enemyShotX, enemyShotY, 0)) {
+            enemyShotIsActive = false;
+        }        
     }
 }
 
