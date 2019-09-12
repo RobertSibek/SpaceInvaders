@@ -16,6 +16,7 @@ function fpsCounterClass() {
 	}
 
 	this.draw = function () {
+        ctx.font = '12px Arial';
 		if (this.isVisible) {
 			var fps = Math.round(currentFrame / this.secondsSinceGameStart * 10);
 			// fps dropped below minimum threshold

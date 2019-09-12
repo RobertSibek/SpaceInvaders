@@ -9,6 +9,7 @@ const CANVAS_HEIGHT = 600;
 const CX = CANVAS_WIDTH / 2; // Center X
 const CY = CANVAS_HEIGHT / 2; // Center Y
 const CL_BACKGROUND = 'black';
+const CL_INTRO_BACKGROUND = 'black';
 const CL_DEFAULT = 'white';
 const DEFAULT_FONT = '12px Arial';
 var FRAMES_PER_SECOND = 60;

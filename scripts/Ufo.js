@@ -1,7 +1,7 @@
 // Ufo.js
 
 const UFO_SCORE = 150;
-const UFO_Y = 40;
+const UFO_Y = 50;
 const MOVE_SPEED = 2;
 const MIN_SECONDS_TO_SPAWN = 4;
 const MAX_SECONDS_TO_SPAWN = 15;

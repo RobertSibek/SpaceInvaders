@@ -52,6 +52,7 @@ var starfield = new starfieldClass();
 var message = new messageClass();
 var player = new playerClass();
 var fpsCounter = new fpsCounterClass();
+var BMGLogo = new BMGLogoClass();
 var barrier1 = new barrierClass();
 var barrier2 = new barrierClass();
 var barrier3 = new barrierClass();
@@ -60,7 +61,7 @@ var barrier4 = new barrierClass();
 // GAME SETTINGS
 var debugEnabled = false;
 var soundEnabled = true;
-var gameState = 2;
+var gameState = GAME_STATE_INTRO;
 var showKeyCodes = false;
 var playerScore = 0;
 var currentWave = 1;
@@ -115,9 +116,12 @@ function initAll() {
     initInput();
     player.init(images["spaceship3"], images["playershot"]);
     starfield.init();
+    starfield.dynamicLayers = true;
+    starfield.setPower(7);
     ufo.init(images["ufo"]);
     message.init(1000);
     fpsCounter.init();
+    BMGLogo.init();
     barrier1.init(104, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
     barrier2.init(278, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
     barrier3.init(452, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
@@ -180,15 +184,37 @@ function startNextWave() {
     resetGame();
 }
 
+function drawBackground() {
+    ctx.globalAlpha = 0.3;
+    ctx.drawImage(images["background"], 0, 0);
+    ctx.globalAlpha = 1;
+}
+
 function drawEverything() {
+
     switch (gameState) {
+        case GAME_STATE_INTRO:
+            colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_INTRO_BACKGROUND);
+            drawBackground();
+            starfield.draw();
+            ctx.fillStyle = '#C4C4C4';
+            var txt = 'SPACE INVADERS 2019';
+            ctx.font = '50px Arial';
+            ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY - 200);
+            var txt = 'by';
+            ctx.font = '25px Arial';
+            ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY - 140);
+            BMGLogo.draw();
+            var txt = 'Press SPACE to play';
+            ctx.fillStyle = '#F1F1AA';
+            ctx.font = '30px Arial';
+            ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 250);
+            fpsCounter.draw();
+            break;
         case GAME_STATE_PLAY:
         case GAME_STATE_PAUSE:
-            ctx.fillStyle = 'black';
             colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_BACKGROUND);
-            ctx.globalAlpha = 0.3;
-            ctx.drawImage(images["background"], 0, 0);
-            ctx.globalAlpha = 1;
+            drawBackground();
             starfield.draw();
             drawHeader();
             barrier1.draw();
@@ -209,26 +235,33 @@ function drawEverything() {
 }
 
 function moveEverything() {
-    if (gameState == GAME_STATE_PLAY) {
-        starfield.move();
-        moveAliens();
-        ufo.move();
-        enemyInColAbovePlayerAttemptToFire();
-        moveShots();
-        player.move();
-        message.animate();
-    } else if (gameState == GAME_STATE_PAUSE) {
-        if (requestNextFrame) {
+    switch (gameState) {
+        case GAME_STATE_INTRO:
+            starfield.move();
+            //            BMGLogo.move();
+            break;
+        case GAME_STATE_PLAY:
             starfield.move();
             moveAliens();
             ufo.move();
             enemyInColAbovePlayerAttemptToFire();
             moveShots();
             player.move();
-            requestNextFrame = false;
-        } else {
-            // RELAX.zzzzzzzz
-        }
+            message.animate();
+            break;
+        case GAME_STATE_PAUSE:
+            if (requestNextFrame) {
+                starfield.move();
+                moveAliens();
+                ufo.move();
+                enemyInColAbovePlayerAttemptToFire();
+                moveShots();
+                player.move();
+                requestNextFrame = false;
+            } else {
+                // RELAX.zzzzzzzz
+            }
+            break;
     }
 }
 
@@ -452,7 +485,7 @@ function drawShots() {
         }
         if (barrier4.checkHit(shotX, shotY, 1)) {
             shotIsActive = false;
-        }        
+        }
     }
     if (enemyShotIsActive) {
         ctx.drawImage(images["enemyshot"], enemyShotX - 1, enemyShotY - 4);
@@ -467,7 +500,7 @@ function drawShots() {
         }
         if (barrier4.checkHit(enemyShotX, enemyShotY, 0)) {
             enemyShotIsActive = false;
-        }        
+        }
     }
 }
 
