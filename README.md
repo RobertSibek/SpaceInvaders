@@ -11,6 +11,7 @@ S                           Sound On/Off
 P                           Pause game
 G                           God mode (faster shots and invicibility)
 T                           Screenshot mode
+Q                           Quit to title screen
 F                           Show Fps
 H                           Display Hitboxes (where available)
 L                           Enable Dynamic Starfield
@@ -61,12 +62,13 @@ L                           Enable Dynamic Starfield
 	[] increase alien movement speed
 	[] increase ufo points
 [] rewrite Audio.js similar to LoadImages (2)
-[] show intro screen (2)
-    [] create intro screen
-    [] play intro music
-    [] show BMG logo
-        [] create BMG logo
-    [] display blinking text click to play
+[x] show intro screen (2)
+    [x] create intro screen
+    [NA] play intro music (not allowed by chrome until user interaction)
+    [x] show BMG logo
+        [x] create BMG logo
+    [x] display blinking text click to play 
+            NOTE: fuck blinking texts, static is enough
 [] show end screen (2)
     [] show game summary
         [] show score points in huge font in the centre
