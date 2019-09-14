@@ -1,0 +1,45 @@
+﻿<!-- Space Invaders 2019 v1.1.0 - Robert Síbek, Bad Mug Games 2019 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bad Mug Games Logo test</title>
+    <meta content="text/html;charset=utf‐8" http-equiv="Content‐Type">
+    <meta content="utf‐8" http‐equiv="encoding">
+    <meta name="author" content="Robert Síbek">
+    <meta name="description" content="Space Invaders game remake made HTML5/JS">
+    <meta name="keywords" content="space invaders,arcade,game,bad mug,robert,sibek">
+    <meta name="application-name" content="Space Invaders 2019 v1.1.0">
+    <meta name="creator" content="Robert Síbek">
+    <meta name="publisher" content="Bad Mug Games">
+</head>
+
+<script type="text/javascript" src="scripts/GraphicCommon.js"></script>
+<script type="text/javascript" src="scripts/BMGLogo.js"></script>
+
+<script>
+    var canvas, ctx;
+    var logo = new BMGLogoClass();
+
+    window.onload = function() {
+        createCanvas();
+        canvas = document.getElementById(CANVAS_NAME);
+        ctx = canvas.getContext('2d');
+        colorRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT, 'black');
+        logo.init(CX, CY);
+        logo.draw();
+    }
+
+</script>
+
+<body>
+    <!-- 
+        
+        "Nothing here, but empty, lonely, deep space." 
+
+        NoBody
+    
+    -->
+</body>
+
+</html>

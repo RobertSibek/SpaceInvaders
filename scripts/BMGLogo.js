@@ -1,5 +1,6 @@
-const TILE_W = 20;
-const TILE_H = 20;
+const LOGO_SCALING = 1;
+const TILE_W = 20 * LOGO_SCALING;
+const TILE_H = 20 * LOGO_SCALING;
 const SQUARE_WHITE = 1;
 const SQUARE_BLACK = 2;
 const SQUARE_RED = 6;
@@ -38,7 +39,7 @@ function BMGLogoClass() {
         this.scale = 1;
         this.tileW = TILE_W 
         this.tileH = TILE_H;
-        this.x = CX - LOGO_COLS * this.tileW / 2 + TILE_W; // center
+        this.x = CX - LOGO_COLS * this.tileW / 2 + TILE_W ; // center
         this.y = CY - LOGO_ROWS * this.tileH / 2; // center
         this.showIndex = false;
         this.isAnimating = false;
@@ -193,8 +194,10 @@ function BMGLogoClass() {
         }
         ctx.fillStyle = '#666999';
         ctx.font = '25px Arial';
+//        ctx.font = '35px Arial';
         var bmg = 'Bad Mug Games';
         var text = ctx.measureText(bmg);   
+//        ctx.fillText(bmg, CX - text.width / 2 - TILE_W / 2, CY + LOGO_ROWS * TILE_H * 0.75);
         ctx.fillText(bmg, CX - text.width / 2 + TILE_W / 2, CY + LOGO_ROWS * TILE_H * 0.75);
     }
 

@@ -1,6 +1,7 @@
 /* ImageLoading.js - handling loading images */
 
 const PATH_IMG = 'images/';
+
 var totalResources = 9;
 var numResourcesLoaded = 0;
 var images = {};
