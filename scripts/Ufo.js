@@ -39,12 +39,12 @@ function ufoClass() {
 	}
 
 	this.spawn = function () {
-		playSound(sfxUfoSpawned);
+		playSound(sounds["ufoSpawned"]);
 		this.isActive = true;
 	}
 
 	this.destroy = function () {
-		playSound(sfxUfoHit);
+		playSound(sounds["ufoHit"]);
 		this.reset();
 		return this.points;
 	}

@@ -21,7 +21,6 @@ const DISPLAY_TOP = HEADER_BG_HEIGHT; // minimum drawing Y distance from the top
 
 // GAME SETTINGS
 const COUNT_FPS_TICK = 10;
-const BARRIER_PIXEL_RES = 10;
 
 // ENEMY SETTINGS
 const ENEMY_SHOT_SPEED = 3;
@@ -114,16 +113,14 @@ function initAll() {
     initInput();
     player.init(images["spaceship3"], images["playershot"]);
     starfield.init();
-    starfield.dynamicLayers = true;
-    starfield.setPower(7);
     ufo.init(images["ufo"]);
     message.init(1000);
     fpsCounter.init();
     BMGLogo.init();
-    barrier1.init(104, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
-    barrier2.init(278, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
-    barrier3.init(452, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
-    barrier4.init(626, CANVAS_HEIGHT - 170, BARRIER_PIXEL_RES);
+    barrier1.init(104, CANVAS_HEIGHT - 170);
+    barrier2.init(278, CANVAS_HEIGHT - 170);
+    barrier3.init(452, CANVAS_HEIGHT - 170);
+    barrier4.init(626, CANVAS_HEIGHT - 170);
 }
 
 function loadingDoneSoStartGame() {
@@ -156,8 +153,8 @@ function debugText(text) {
 
 function resetGame() {
     resetAliens();
-    ufo.reset();
-    starfield.reset();
+    ufo.reset();   
+    starfield.reset();   
     barrier1.reset();
     barrier2.reset();
     barrier3.reset();
@@ -269,7 +266,7 @@ function moveEverything() {
 }
 
 function blastAllAliens() {
-    playSound(sfxBlastAll);
+    playSound(sounds["blastAll"]);
     for (var i = 0; i < alienGrid.length; i++) {
         if (alienGrid[i]) {
             alienGrid[i] = 0;
@@ -304,7 +301,7 @@ function playerShotCollisionsCheck() {
     pixelOnAlienCheck(shotX, shotY);
     pixelOnUfoCheck(shotX, shotY);
     if (shotY < DISPLAY_TOP) { // if shot has moved beyond the top edge
-        playSound(sfxShotLeft);
+        playSound(sounds["shotLeft"]);
         shotIsActive = false;
     }
 }
@@ -314,7 +311,7 @@ function playerShootIfReloaded() {
         shotX = player.x;
         shotY = player.y;
         shotIsActive = true;
-        playSound(sfxPlayerFire);
+        playSound(sounds["playerFire"]);
     }
 }
 
@@ -358,7 +355,7 @@ function pixelOnAlienCheck(whatX, whatY) {
 
     if (alienGrid[alienIndex] == 1) {
         // shot hit this alien
-        playSound(sfxEnemyHit);
+        playSound(sounds["enemyHit"]);
         alienGrid[alienIndex] = 0;
         playerScore += ALIEN_POINTS;
         aliensLeft--;
@@ -595,7 +592,7 @@ function enemyInColAbovePlayerAttemptToFire() {
             enemyShotX = swarmOffsetX + tileCol * ALIEN_W + (ALIEN_W - ALIEN_SPACING_W) * 0.5;
             enemyShotY = swarmOffsetY + eachRow * ALIEN_H + (ALIEN_H - ALIEN_SPACING_H) * 0.5;
             enemyShotIsActive = true;
-            playSound(sfxEnemyFire);
+            playSound(sounds["enemyFire"]);
             return; // lowest alien found, no need to keep searching
         }
     }
@@ -606,7 +603,7 @@ function enemyShotCollisionsCheck() {
         if (enemyShotX > player.x - player.ship.width / 2 && enemyShotX < player.x + player.ship.width / 2) { // horizontally too?
             // player has been hit by enemy
             if (!godModeEnabled) {
-                playSound(sfxPlayerHit);
+                playSound(sounds["playerHit"]);
                 enemyShotIsActive = false;
                 if (player.lifes > 1) {
                     player.lifes--;
@@ -614,7 +611,7 @@ function enemyShotCollisionsCheck() {
                     endGame();
                 }
             } else {
-                playSound(sfxGodProtection);
+                playSound(sounds["godProtection"]);
             }
         }
     }

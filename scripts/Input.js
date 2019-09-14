@@ -68,9 +68,8 @@ function keyPressed(evt) {
     if (evt.keyCode == KEY_SPACEBAR) {
         if (gameState == GAME_STATE_INTRO) {
             gameState = GAME_STATE_PLAY;
-            playSound(sfxGameStart);
-            starfield.dynamicLayers = false;
-            starfield.setPower(6);
+            playSound(sounds["gameStart"]);
+            starfield.switchDynamicLayers();
         } else {
             playerShootIfReloaded();
         }
@@ -85,6 +84,7 @@ function keyPressed(evt) {
         } else {
             soundEnabled = true;
             showMessage(3, 'Sound effects enabled');
+            playSound(sounds["gameStart"]);
         }
     }
     if (evt.keyCode == KEY_LETTER_D) {
@@ -128,6 +128,7 @@ function keyPressed(evt) {
         if (evt.keyCode == KEY_LETTER_Q) {
             endGame();
             gameState = GAME_STATE_INTRO;
+             starfield.switchDynamicLayers();
         }
         if (evt.keyCode == KEY_LETTER_G) {
             if (godModeEnabled) {

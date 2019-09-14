@@ -1,11 +1,5 @@
 // Starfield.js - render starfield background as separate layers
 
-/*
-	TODO:
-		[] implement star blinking based on the distance from vertical center
-
-*/
-
 const DEFAULT_LAYERS = 3;
 const MAX_LAYERS = 10;
 const MAX_STARS_PER_LAYER = 30;
@@ -42,9 +36,9 @@ function starfieldClass() {
         debugText('starfieldClass: Starfield initialized');
         this.layerCount = DEFAULT_LAYERS;
         this.currentFrame = 0;
-        this.dynamicLayers = false;
+        this.dynamicLayers = true;
         this.speedX = 1;
-        this.power = 10;
+        this.power = 9;
         this.reset();
     }
 
@@ -117,7 +111,6 @@ function starfieldClass() {
         this.currentFrame++;
         for (var l = 0; l < this.layerCount; l++) {
             stars = starfieldArray[l];
-            //			var layerMoveSpeedY = getRandomIntInclusive(3, 15);
             for (var s = 0; s < stars.length; s++) {
                 var layerMoveSpeedY = getRandomIntInclusive(MIN_MOVE_SPEED_Y, MAX_MOVE_SPEED_Y);
                 var star = stars[s];
@@ -138,13 +131,15 @@ function starfieldClass() {
 
         if (this.currentFrame > this.timeToChange) {
             debugText('starfieldClass: wind of change arrived');
-            if (this.dynamicLayers) {
-                if (getDiceRoll()) {
-                    this.addLayer();
-                } else {
-                    this.removeLayer();
+            /*
+                if (this.dynamicLayers) {
+                    if (getDiceRoll()) {
+                        this.addLayer();
+                    } else {
+                        this.removeLayer();
+                    }
                 }
-            }
+                */
             this.timeToChange = this.currentFrame + getRandomIntInclusive(2, 10) * FRAMES_PER_SECOND;
         }
     }
@@ -155,16 +150,8 @@ function starfieldClass() {
             for (var s = 0; s < stars.length; s++) {
                 var star = stars[s];
                 var pos = star.getPos();
-                if (this.dynamicLayers) {
-                    var col = getRandomIntInclusive(128, 255);
-                    colorCircle(pos.x, pos.y, star.starRadius, `rgba(${col}, ${col}, ${col}, 1)`);
-                } else {
-                    colorCircle(pos.x, pos.y, star.starRadius, starBrightness[this.power]);
-                }
+                colorCircle(pos.x, pos.y, star.starRadius, starBrightness[this.power]);
             }
         }
-
     }
-
-
 }

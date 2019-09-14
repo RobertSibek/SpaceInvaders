@@ -1,4 +1,4 @@
-# Space Invaders
+# Space Invaders 2019
 
 ## Version 1.1.0
 ## Created by Robert Sibek, Bad Mug Games
@@ -103,7 +103,7 @@ L                           Enable Dynamic Starfield
 	[] increase points for aliens with each wave
 	[] increase alien movement speed
 	[] increase ufo points
-[] rewrite Audio.js similar to LoadImages (2)
+[x] rewrite Audio.js similar to LoadImages (2)
 [x] show intro screen (2)
     [x] create intro screen
     [NA] play intro music (not allowed by chrome until user interaction)
@@ -147,9 +147,10 @@ L                           Enable Dynamic Starfield
 - enhanced graphic
 - animated starfield background
 - standard controls
+- added Ufo
 
 ### version 1.1
-- god mode added
+- God mode added
 - sound effect can be enabled/disabled now
 - new UFO arrival sound
 - retro tv frame added
@@ -161,5 +162,6 @@ L                           Enable Dynamic Starfield
 - fixed UFO hitbox
 - added barriers to protect player's ship
 - changed animation loop from setInterval to requestAnimationFrame (battery saving, more stable performance)
+- added intro screen with logo (Finally!)
 
 

@@ -1,39 +1,39 @@
 // Barriers.js
 
-const BARRIER_RES = 10; // 10px  width and height
-const BARRIER_COLS = 7;
-const BARRIER_ROWS = 6;
+const BARRIER_RES = 5; // 5px  width and height
+const BARRIER_COLS = 15;
+const BARRIER_ROWS = 15;
 const BARRIER_COLOR = '#FFAA00';
 
-const barrierGrid1 = [
-    0, 0, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 1, 1, 0,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1
-];
-
-const barrierGrid2 = [
-    0, 0, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 1, 1, 0,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 0, 0, 0, 1, 1,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1
+const barrierGrid3 = [
+    0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+    1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+    1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
 ];
 
 function barrierClass() {
 
-    this.init = function (x, y, pixelWidth) {
+    this.init = function (x, y) {
         this.x = x;
         this.y = y;
-        this.barrierGrid = barrierGrid1.slice(0);
-        this.pixelWidth = pixelWidth;
+        this.barrierGrid = barrierGrid3.slice(0);
+        this.pixelWidth = BARRIER_RES;
     }
 
     this.reset = function () {
-        this.barrierGrid = barrierGrid1.slice(0);
+        this.barrierGrid = barrierGrid3.slice(0);
     }
 
     this.draw = function () {
@@ -56,10 +56,13 @@ function barrierClass() {
                     var bTileRow = Math.floor((shotY - this.y) / this.pixelWidth);
                     var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
                     if (this.barrierGrid[bTileIndex]) {
-                        this.barrierGrid[bTileIndex - BARRIER_COLS] = 0;
                         this.barrierGrid[bTileIndex] = 0;
-
-                        return true; // Deactivete shot now
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
+                        this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS + 1] = 0;
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS - 1] = 0;
+                        return true; // Deactivete shot after impact
                     }
                 }
             }
@@ -73,8 +76,13 @@ function barrierClass() {
                     var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
                     if (this.barrierGrid[bTileIndex]) {
                         this.barrierGrid[bTileIndex] = 0;
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
                         this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
-                        return true; // Deactivete shot now
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS + 1] = 0;
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS - 1] = 0;
+                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 2 * BARRIER_COLS] = 0;
+                        return true; // Deactivete shot after impact
                     }
                 }
             }
