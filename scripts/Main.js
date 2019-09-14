@@ -87,9 +87,7 @@ var enemyShotY;
 var enemyShotIsActive = false;
 
 // EASTER EGGS
-var letterSequence = '';
-var andrejMode = false;
-var tomioMode = false;
+var customImageLoaded = false;
 
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
@@ -190,6 +188,22 @@ function drawBackground() {
     ctx.globalAlpha = 1;
 }
 
+function drawIntroScreen() {
+    ctx.fillStyle = '#C4C4C4';
+    var txt = 'SPACE INVADERS 2019';
+    ctx.font = '50px Arial';
+    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY - 200);
+    var txt = 'by';
+    ctx.font = '25px Arial';
+    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 10, CY - 120);
+    BMGLogo.draw();
+    var txt = 'Press SPACE to play';
+    ctx.fillStyle = '#F1F1AA';
+    ctx.font = '30px Arial';
+    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 220);
+    return ctx;
+}
+
 function drawEverything() {
 
     switch (gameState) {
@@ -197,18 +211,7 @@ function drawEverything() {
             colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_INTRO_BACKGROUND);
             drawBackground();
             starfield.draw();
-            ctx.fillStyle = '#C4C4C4';
-            var txt = 'SPACE INVADERS 2019';
-            ctx.font = '50px Arial';
-            ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY - 200);
-            var txt = 'by';
-            ctx.font = '25px Arial';
-            ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY - 140);
-            BMGLogo.draw();
-            var txt = 'Press SPACE to play';
-            ctx.fillStyle = '#F1F1AA';
-            ctx.font = '30px Arial';
-            ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 250);
+            drawIntroScreen();
             fpsCounter.draw();
             break;
         case GAME_STATE_PLAY:
@@ -436,7 +439,6 @@ function getSwarmGroupLowest() {
 }
 
 function drawHeader() {
-    //	colorRect(0, 0, CANVAS_WIDTH, HEADER_BG_HEIGHT, CL_HEADER_BG);
     var w = player.ship.width / 4;
     var h = player.ship.height / 4;
     drawText(HEADER_DIST_FROM_LEFT_EDGE, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER, 'left');
@@ -467,7 +469,6 @@ function resetAliens() {
             }
         }
     }
-
     recomputeSwarmGroupWidth();
 }
 
@@ -511,14 +512,22 @@ function drawAliens() {
             if (isAlienAtTileCoord(eachCol, eachRow)) {
                 var alienLeftEdgeX = eachCol * ALIEN_W + swarmOffsetX;
                 var alienTopEdgeY = eachRow * ALIEN_H + swarmOffsetY;
-                // new render method using spritesheet
-                ctx.drawImage(images["aliens"],
-                    alienSpriteIndex * ALIEN_W, 0, // source x, source y
-                    ALIEN_W, ALIEN_H, // frame width, height
-                    alienLeftEdgeX, // destination x
-                    alienTopEdgeY, // destination y
-                    ALIEN_W - ALIEN_SPACING_W,
-                    ALIEN_H - ALIEN_SPACING_H);
+                if (customImageLoaded) {
+                    ctx.drawImage(images["custom"], 
+                                  alienLeftEdgeX, 
+                                  alienTopEdgeY, 
+                                  ALIEN_W - ALIEN_SPACING_W,
+                                  ALIEN_H - ALIEN_SPACING_H);
+                } else {
+                    // new render method using spritesheet
+                    ctx.drawImage(images["aliens"],
+                        alienSpriteIndex * ALIEN_W, 0, // source x, source y
+                        ALIEN_W, ALIEN_H, // frame width, height
+                        alienLeftEdgeX, // destination x
+                        alienTopEdgeY, // destination y
+                        ALIEN_W - ALIEN_SPACING_W,
+                        ALIEN_H - ALIEN_SPACING_H);
+                }
             }
         }
         // change alien type for next row
@@ -529,8 +538,6 @@ function drawAliens() {
         }
     }
 }
-
-
 
 function moveAliens() {
     swarmOffsetX += swarmMoveDir * swarmLowPopulationSpeedBoost;

@@ -109,6 +109,10 @@ function keyPressed(evt) {
         var dynLayers = starfield.switchDynamicLayers();
         message.push('Starfield dynamic layers ' + (dynLayers ? 'enabled' : 'disabled'));
     }
+    if (evt.keyCode == KEY_LETTER_C) {
+        customImageLoaded = !customImageLoaded;
+        showMessage(3, 'Custom images ' + (customImageLoaded ? 'enabled' : 'disabled'));
+    }
     // Keycodes below are only available when in play
     if (gameState == GAME_STATE_PLAY ||
         gameState == GAME_STATE_PAUSE) {

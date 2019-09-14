@@ -51,13 +51,55 @@ L                           Enable Dynamic Starfield
 	[x] allow to setup shot image
 [x] add star field background (parallax vertical scroll in 3 rows)
 [x] shot as image
+[] tune the difficulty on new notebook
+    [] get a new notebook AFAP, under grace in a perfect way
+        [] get money for new notebook (~81.000CZK)
+        [] WHY do I want new notebook?
+            [x] I want my own notebook
+            [x] I want a perfect one
+                WHY?
+                [x] So I can enjoy the work on it
+                [x] Because I can focus on work fully without wanting a better one
+                [x] Because it will increase my UX and speed
+                [x] Because it reflects my self-worth
+            [] I'll have to return the old one               
+        [x] choose the perfect notebook - it's hard to decide, I'll buy both
+            [x] Why go for Macbook Pro?
+                PROS:
+                    [x] MacOS is just perfect
+                    [] can get job as iOS developer
+                    [] can continue with my own apps
+                    [] can colaborate with Radim
+                    [] Stylish piece of hardware
+                    [x] Possible future deployment both to iOS and Android
+                    [] Retina display
+                    [] OS optimization increases UX
+                    [x] can develop iOS apps in XCODE (love it!)
+                    [] it's hipsta-thing, everybody will see me as I'm rich
+                CONS:
+                    [] price
+                    [] lower HW specs than DELL
+            [] Why go for Dell XPS 15
+                PROS:
+                    [x] higher resolution than Macbook
+                    [x] OLED display
+                    [x] better HW specs (32GB RAM, 1TB, faster i9 CPU)
+                    [x] cheaper
+                    [x] can run windows games
+                    [x] Better GPU (NVidia 1650)
+                    [] touch screen (though have no usage for it currently)
+                CONS:
+                    [] can not deploy to iOS
+                    [] it's less hipsta-thing
 
 ### VERSION 1.1 RELEASE TODOS
 [x] destroy player when aliens are below critical level (1)
-[] level 100 is the final
-[] tune the difficulty on new pc
+[] level 100 is the final                
 [x] add barriers to protect player (as from the original game) (1)
-[] implement difficulty increasing with each wave (2)
+[] improve barrier rendering
+	[] use higher resolution/array item or different attitude
+	[] make the barrier destruction more like stone not butter, iow use random pixel spread not just uniform hole
+[] implement difficulty scaling with each wave (2)
 	[] increase points for aliens with each wave
 	[] increase alien movement speed
 	[] increase ufo points
@@ -89,7 +131,7 @@ L                           Enable Dynamic Starfield
 [] add UFO hunt every 5th level
 [] add boss fight, every 10th level
 [] add easter eggs
-    [] load custom alien sprites (eg. your boss, wift, husband, ex, whatever...)
+    [] load custom alien sprites (eg. your boss, wife, husband, ex, whatever...)
 
 ### KNOWN BUGS:
 - none
