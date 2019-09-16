@@ -60,9 +60,8 @@ function barrierClass() {
                         this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
                         this.barrierGrid[bTileIndex - BARRIER_COLS] = 0;
                         // check if the shot is at very first or last row of barrier grid
-                        var colPosition = bTileIndex % BARRIER_COLS;
-                        if (colPosition > 1 &&
-                            colPosition <= BARRIER_COLS) {
+                        var colPosition = bTileIndex % (BARRIER_COLS - 1);
+                        if (colPosition > 1 && colPosition < BARRIER_COLS) {
                             if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
                             if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
                             if (getDiceRoll()) this.barrierGrid[bTileIndex - BARRIER_COLS] = 0;
@@ -82,12 +81,15 @@ function barrierClass() {
                     var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
                     if (this.barrierGrid[bTileIndex]) {
                         this.barrierGrid[bTileIndex] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
-                        this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS + 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS - 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 2 * BARRIER_COLS] = 0;
+                        var colPosition = bTileIndex % (BARRIER_COLS - 1);
+                        if (colPosition > 1 && colPosition < BARRIER_COLS) {
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
+                            this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS + 1] = 0;
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS - 1] = 0;
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex + 2 * BARRIER_COLS] = 0;
+                        }
                         playSound(sounds["barrierHit"]);
                         return true; // Deactivete shot after impact
                     }
