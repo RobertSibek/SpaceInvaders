@@ -14,7 +14,9 @@ function loadImages() {
     loadImage("background");
     loadImage("aliens");
     loadImage("tvframe");
-    loadImage("playershot");
+    loadImage("playershot1");
+    loadImage("playershot2");
+    loadImage("playershot3");
     loadImage("enemyshot");
     loadImage("ufo");
     loadImage("custom");

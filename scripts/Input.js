@@ -68,8 +68,7 @@ function keyPressed(evt) {
     if (evt.keyCode == KEY_SPACEBAR) {
         if (gameState == GAME_STATE_INTRO) {
             gameState = GAME_STATE_PLAY;
-            playSound(sounds["gameStart"]);
-            starfield.switchDynamicLayers();
+            resetGame();
         } else {
             playerShootIfReloaded();
         }
@@ -128,7 +127,7 @@ function keyPressed(evt) {
         if (evt.keyCode == KEY_LETTER_Q) {
             endGame();
             gameState = GAME_STATE_INTRO;
-             starfield.switchDynamicLayers();
+            starfield.switchDynamicLayers();
         }
         if (evt.keyCode == KEY_LETTER_G) {
             if (godModeEnabled) {
@@ -171,13 +170,16 @@ function keyPressed(evt) {
             }
         }
         if (evt.keyCode == KEY_NUMBER_1) {
-            player.changeShip(images["spaceship1"], images["playershot"]);
+            player.changeShip(images["spaceship1"], images["playershot1"]);
+            playerFireSfx = sounds["playerFire1"];
         }
         if (evt.keyCode == KEY_NUMBER_2) {
-            player.changeShip(images["spaceship2"], images["playershot"]);
+            player.changeShip(images["spaceship2"], images["playershot2"]);
+            playerFireSfx = sounds["playerFire2"];
         }
         if (evt.keyCode == KEY_NUMBER_3) {
-            player.changeShip(images["spaceship3"], images["playershot"]);
+            player.changeShip(images["spaceship3"], images["playershot3"]);
+            playerFireSfx = sounds["playerFire3"];
         }
         // Reset to default settings
         if (evt.keyCode == KEY_LETTER_R) {

@@ -84,6 +84,7 @@ var swarmGroupLowest = 0;
 var enemyShotX;
 var enemyShotY;
 var enemyShotIsActive = false;
+var playerFireSfx;
 
 // EASTER EGGS
 var customImageLoaded = false;
@@ -111,7 +112,8 @@ function sfxLoadingDone() {
 
 function initAll() {
     initInput();
-    player.init(images["spaceship3"], images["playershot"]);
+    player.init(images["spaceship1"], images["playershot1"]);
+    playerFireSfx = sounds["playerFire1"];
     starfield.init();
     ufo.init(images["ufo"]);
     message.init(1000);
@@ -152,9 +154,12 @@ function debugText(text) {
 }
 
 function resetGame() {
+    stopSound(sounds["DarkVibes"]);
+    playSound(sounds["gameStart"]);
+    starfield.switchDynamicLayers();
     resetAliens();
-    ufo.reset();   
-    starfield.reset();   
+    ufo.reset();
+    starfield.reset();
     barrier1.reset();
     barrier2.reset();
     barrier3.reset();
@@ -166,7 +171,8 @@ function endGame() {
     playerScore = 0;
     player.lifes = 3;
     alienType = 0;
-    resetGame();
+    gameState = GAME_STATE_INTRO;
+    playSound(sounds["DarkVibes"]);
 }
 
 function startNextWave() {
@@ -311,7 +317,7 @@ function playerShootIfReloaded() {
         shotX = player.x;
         shotY = player.y;
         shotIsActive = true;
-        playSound(sounds["playerFire"]);
+        playSound(playerFireSfx);
     }
 }
 
@@ -510,11 +516,11 @@ function drawAliens() {
                 var alienLeftEdgeX = eachCol * ALIEN_W + swarmOffsetX;
                 var alienTopEdgeY = eachRow * ALIEN_H + swarmOffsetY;
                 if (customImageLoaded) {
-                    ctx.drawImage(images["custom"], 
-                                  alienLeftEdgeX, 
-                                  alienTopEdgeY, 
-                                  ALIEN_W - ALIEN_SPACING_W,
-                                  ALIEN_H - ALIEN_SPACING_H);
+                    ctx.drawImage(images["custom"],
+                        alienLeftEdgeX,
+                        alienTopEdgeY,
+                        ALIEN_W - ALIEN_SPACING_W,
+                        ALIEN_H - ALIEN_SPACING_H);
                 } else {
                     // new render method using spritesheet
                     ctx.drawImage(images["aliens"],

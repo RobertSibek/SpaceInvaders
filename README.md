@@ -163,5 +163,6 @@ L                           Enable Dynamic Starfield
 - added barriers to protect player's ship
 - changed animation loop from setInterval to requestAnimationFrame (battery saving, more stable performance)
 - added intro screen with logo (Finally!)
+- different sounds for each spaceship
 
 
