@@ -52,12 +52,6 @@ function drawText(x, y, text) {
 	ctx.fillText(text, x, y);
 }
 
-function drawColorCenteredTextWithFont(y, text, font, color) {
-    ctx.font = font;
-    ctx.fillStyle = color;
-    ctx.fillText(text, CX - ctx.measureText(text).width / 2, y);
-}
-
 function saveFontSettings() {
 	prevFont = ctx.font;
 	prevAlign = ctx.textAlign;
@@ -79,14 +73,14 @@ function customText(x, y, text, color, font, align) {
 	resumeFontSettings();
 }
 
-function drawColorText(x, y, text, color) {
+function drawText(x, y, text, color) {
 	ctx.font = DEFAULT_FONT;
 	ctx.fillStyle = color;
 	ctx.textAlign = 'left';
 	ctx.fillText(text, x, y);
 }
 
-function drawAlignedColorTextWithFont(x, y, text, color, font, align) {
+function drawText(x, y, text, color, font, align) {
 	ctx.font = font;
 	ctx.fillStyle = color;
 	ctx.textAlign = align;

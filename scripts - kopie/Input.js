@@ -66,14 +66,15 @@ function keyPressed(evt) {
         showMessage(3, 'Show keyCodes ' + (showKeyCodes ? 'enabled' : 'disabled'));
     }
     if (evt.keyCode == KEY_SPACEBAR) {
-        if (gameState == GAME_STATE_INTRO ||
-            gameState == GAME_STATE_ENDSCREEN) {
+        if (gameState == GAME_STATE_INTRO) {
             gameState = GAME_STATE_PLAY;
-            newGame();
-        } else if (gameState == GAME_STATE_PLAY ||
-            gameState == GAME_STATE_PAUSE) {
+            resetGame();
+        } else {
             playerShootIfReloaded();
         }
+    }
+    if (evt.keyCode == KEY_LETTER_F) {
+        fpsCounter.isVisible = !fpsCounter.isVisible;
     }
     if (evt.keyCode == KEY_LETTER_S) {
         if (soundEnabled) {
@@ -88,7 +89,6 @@ function keyPressed(evt) {
     if (evt.keyCode == KEY_LETTER_D) {
         console.log('Debug mode ' + (debugEnabled ? 'OFF' : 'ON'));
         debugEnabled = !debugEnabled;
-        fpsCounter.isVisible = !fpsCounter.isVisible;
     }
     if (evt.keyCode == KEY_LESS_THAN) {
         starfield.removeLayer();
@@ -112,11 +112,6 @@ function keyPressed(evt) {
         customImageLoaded = !customImageLoaded;
         showMessage(3, 'Custom images ' + (customImageLoaded ? 'enabled' : 'disabled'));
     }
-
-    if (evt.keyCode == KEY_LETTER_Q) {
-        gameState = GAME_STATE_INTRO;
-        starfield.enableDynamicLayers(true);
-    }
     // Keycodes below are only available when in play
     if (gameState == GAME_STATE_PLAY ||
         gameState == GAME_STATE_PAUSE) {
@@ -127,12 +122,17 @@ function keyPressed(evt) {
             keyHeld_Right = true;
         }
         if (evt.keyCode == KEY_TAB) {
-            if (debugEnabled) requestNextFrame = true;
+            requestNextFrame = true;
+        }
+        if (evt.keyCode == KEY_LETTER_Q) {
+            endGame();
+            gameState = GAME_STATE_INTRO;
+            starfield.switchDynamicLayers();
         }
         if (evt.keyCode == KEY_LETTER_G) {
             if (godModeEnabled) {
                 godModeEnabled = false;
-                player.reset();
+                player.shotSpeed = PL_SHOT_SPEED;
                 showMessage(3, 'God mode disabled');
             } else {
                 godModeEnabled = true;

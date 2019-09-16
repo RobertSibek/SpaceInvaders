@@ -5,8 +5,7 @@ const GAME_STATE_INTRO = 0;
 const GAME_STATE_MENU = 1;
 const GAME_STATE_PLAY = 2;
 const GAME_STATE_PAUSE = 3;
-const GAME_STATE_ENDSCREEN = 4;
-const GAME_STATE_WINSCREEN = 5;
+const GAME_STATE_WINSCREEN = 4;
 
 // DEFAULT COLORS
 const CL_HEADER_TEXT = 'yellow';
@@ -33,15 +32,13 @@ const ALIEN_H = 32; // originally 36
 const TOTAL_ALIEN_SPRITES = 12;
 const ALIEN_SPACING_W = 5;
 const ALIEN_SPACING_H = 2;
-const SWARM_BASE_SPEED = 1;
 const SWARM_ADVANCE_JUMP = ALIEN_H / 4;
 const ALIEN_COUNT_BOOST_THRESHOLD = 30; // fewer than this, they speed up
 const ALIEN_BOOST_MULT = 0.15; // higher means faster when few aliens left
-const BASE_ALIEN_SCORE = 50;
+const ALIEN_POINTS = 50;
 
 var alienGrid = new Array(ALIEN_COLS * ALIEN_ROWS);
 var aliensLeft;
-var alienPoints = BASE_ALIEN_SCORE;
 
 // SHOT SETTINGS (should be moved to playerClass)
 var shotX; // horizontal position of the shot
@@ -77,7 +74,7 @@ var alienType = 0;
 // variables related to the aliens moving as a group, depends on which are alive
 var swarmOffsetX = 0;
 var swarmOffsetY = 0;
-var swarmMoveDir = SWARM_BASE_SPEED;
+var swarmMoveDir = 1;
 var swarmLowPopulationSpeedBoost = 1;
 var swarmGroupWidth = 0;
 var swarmGroupLeftMargin = 0;
@@ -118,7 +115,6 @@ function initAll() {
     player.init(images["spaceship1"], images["playershot1"]);
     playerFireSfx = sounds["playerFire1"];
     starfield.init();
-    starfield.enableDynamicLayers(true);
     ufo.init(images["ufo"]);
     message.init(1000);
     fpsCounter.init();
@@ -134,7 +130,7 @@ function loadingDoneSoStartGame() {
         window.requestAnimationFrame(mainGame);
         setInterval(countFps, 1000 / COUNT_FPS_TICK);
         initAll();
-        //        resetGame();
+        resetGame();
     }
 }
 
@@ -157,23 +153,13 @@ function debugText(text) {
     }
 }
 
-function newGame() {
-    currentWave = 1;
-    playerScore = 0;
-    player.lifes = 3;
-    alienType = 0;
-    godModeEnabled = false;
-    player.reset();
+function resetGame() {
     stopSound(sounds["DarkVibes"]);
     playSound(sounds["gameStart"]);
-    resetGame();
-}
-
-function resetGame() {
+    starfield.switchDynamicLayers();
     resetAliens();
     ufo.reset();
     starfield.reset();
-    starfield.enableDynamicLayers(false);
     barrier1.reset();
     barrier2.reset();
     barrier3.reset();
@@ -181,13 +167,16 @@ function resetGame() {
 }
 
 function endGame() {
-    gameState = GAME_STATE_ENDSCREEN;
-    starfield.enableDynamicLayers(true);
+    currentWave = 1;
+    playerScore = 0;
+    player.lifes = 3;
+    alienType = 0;
+    gameState = GAME_STATE_INTRO;
+    playSound(sounds["DarkVibes"]);
 }
 
 function startNextWave() {
     currentWave++;
-    alienPoints = currentWave * BASE_ALIEN_SCORE;
     if (alienType < 3) {
         alienType++;
     } else {
@@ -203,7 +192,6 @@ function drawBackground() {
 }
 
 function drawIntroScreen() {
-    playSound(sounds["DarkVibes"]);
     ctx.fillStyle = '#C4C4C4';
     var txt = 'SPACE INVADERS 2019';
     ctx.font = '50px Arial';
@@ -217,11 +205,6 @@ function drawIntroScreen() {
     ctx.font = '30px Arial';
     ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 220);
     return ctx;
-}
-
-function drawEndScreen() {
-    drawColorCenteredTextWithFont(CY, 'GAME OVER', '35px Arial', 'yellow');
-    drawColorCenteredTextWithFont(CY + 50, 'press Q to Main Screen or SPACE to Play again', '18px Arial', 'blue');
 }
 
 function drawEverything() {
@@ -252,8 +235,6 @@ function drawEverything() {
             ctx.drawImage(images["tvframe"], 0, 0);
             fpsCounter.draw();
             break;
-        case GAME_STATE_ENDSCREEN:
-            drawEndScreen();
         default:
             break;
     }
@@ -296,7 +277,7 @@ function blastAllAliens() {
         if (alienGrid[i]) {
             alienGrid[i] = 0;
             aliensLeft--;
-            playerScore += alienPoints;
+            playerScore += ALIEN_POINTS;
             shotIsActive = false;
         }
     }
@@ -322,6 +303,7 @@ function isAlienAtTileCoord(alienTileCol, alienTileRow) {
 }
 
 function playerShotCollisionsCheck() {
+    //    barrier.checkHit(player.shot, shotX, shotY);
     pixelOnAlienCheck(shotX, shotY);
     pixelOnUfoCheck(shotX, shotY);
     if (shotY < DISPLAY_TOP) { // if shot has moved beyond the top edge
@@ -347,7 +329,7 @@ function pixelOnUfoCheck(whatX, whatY) {
 
         if (whatX > ufo.x &&
             whatX < ufo.x + ufo.width) {
-            playerScore += ufo.destroy(currentWave);
+            playerScore += ufo.destroy();
         }
     }
 }
@@ -381,7 +363,7 @@ function pixelOnAlienCheck(whatX, whatY) {
         // shot hit this alien
         playSound(sounds["enemyHit"]);
         alienGrid[alienIndex] = 0;
-        playerScore += alienPoints;
+        playerScore += ALIEN_POINTS;
         aliensLeft--;
         shotIsActive = false;
 
@@ -462,9 +444,9 @@ function getSwarmGroupLowest() {
 function drawHeader() {
     var w = player.ship.width / 4;
     var h = player.ship.height / 4;
-    drawAlignedColorTextWithFont(HEADER_DIST_FROM_LEFT_EDGE, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER, 'left');
-    drawAlignedColorTextWithFont(CX, HEADER_Y, 'Score: ' + lpad(playerScore, 6), CL_HEADER_TEXT, FNT_HEADER, 'center');
-    drawAlignedColorTextWithFont(CANVAS_WIDTH - HEADER_DIST_FROM_LEFT_EDGE - 6.5 * w, HEADER_Y, 'Lifes: ', CL_HEADER_TEXT, FNT_HEADER, 'left');
+    drawText(HEADER_DIST_FROM_LEFT_EDGE, HEADER_Y, 'Wave: ' + currentWave, CL_HEADER_TEXT, FNT_HEADER, 'left');
+    drawText(CX, HEADER_Y, 'Score: ' + lpad(playerScore, 6), CL_HEADER_TEXT, FNT_HEADER, 'center');
+    drawText(CANVAS_WIDTH - HEADER_DIST_FROM_LEFT_EDGE - 6.5 * w, HEADER_Y, 'Lifes: ', CL_HEADER_TEXT, FNT_HEADER, 'left');
     // draw player's lifes as ships
     var headerOffsetY = 1;
     for (var x = 1; x <= player.lifes; x++) {
@@ -477,7 +459,7 @@ function resetAliens() {
     swarmLowPopulationSpeedBoost = 1.0;
     swarmOffsetX = 0;
     swarmOffsetY = 2 * ALIEN_H;
-    swarmMoveDir = SWARM_BASE_SPEED;
+    swarmMoveDir = 1;
 
     for (var eachRow = 0; eachRow < ALIEN_ROWS; eachRow++) {
         for (var eachCol = 0; eachCol < ALIEN_COLS; eachCol++) {
@@ -527,9 +509,6 @@ function drawShots() {
 }
 
 function drawAliens() {
-    if (debugEnabled) {
-        drawText(CANVAS_WIDTH - 150, CANVAS_HEIGHT - 50, 'swarmOffsetX = ' + Math.floor(swarmOffsetX));
-    }
     var alienSpriteIndex = alienType * 3;
     for (var eachRow = 0; eachRow < ALIEN_ROWS; eachRow++) {
         for (var eachCol = 0; eachCol < ALIEN_COLS; eachCol++) {
@@ -562,11 +541,9 @@ function drawAliens() {
         }
     }
 }
-const SPEED_BOOST_PER_WAVE = 0.1;
 
 function moveAliens() {
-    swarmOffsetX += swarmMoveDir * swarmLowPopulationSpeedBoost + (swarmMoveDir * currentWave * SPEED_BOOST_PER_WAVE);
-
+    swarmOffsetX += swarmMoveDir * swarmLowPopulationSpeedBoost;
     if (swarmMoveDir > 0) { // rightward
         if (swarmOffsetX + swarmGroupWidth > canvas.width) { // check right edge
             swarmMoveDir = -1;

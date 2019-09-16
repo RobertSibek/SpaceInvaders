@@ -75,8 +75,8 @@ function starfieldClass() {
         }
     }
 
-    this.enableDynamicLayers = function (isEnabled) {
-        if (!isEnabled) {
+    this.switchDynamicLayers = function () {
+        if (this.dynamicLayers) {
             this.dynamicLayers = false;
             this.reset();
             return false;

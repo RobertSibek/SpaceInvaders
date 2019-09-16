@@ -4,15 +4,20 @@
 ## Created by Robert Sibek, Bad Mug Games
 
 ### CONTROLS
+#### BASIC
 LEFT ARROW, RIGHT ARROW     Player movement
-SPACEBAR                    Fire				
+SPACEBAR                    Fire		
 1 2 3                       Change player's ship 		
 S                           Sound On/Off
+C                           Switch to custom alien images
 P                           Pause game
-G                           God mode (faster shots and invicibility)
 T                           Screenshot mode
 Q                           Quit to title screen
-F                           Show Fps
+#### DEBUG
+D                           Debug mode
+TAB                         Request next frame (while in debug mode & paused)
+G                           God mode (faster shots and invicibility)
+K                           Proceed to next wave (while in God mode)
 H                           Display Hitboxes (where available)
 L                           Enable Dynamic Starfield
 [ ]                         Starfield Brightness
@@ -50,9 +55,9 @@ L                           Enable Dynamic Starfield
 	[x] allow to setup spaceship image
 	[x] allow to setup shot image
 [x] add star field background (parallax vertical scroll in 3 rows)
-[x] shot as image
+[x] display shot as image
 [] tune the difficulty on new notebook
-    [] get a new notebook AFAP, under grace in a perfect way
+    [] get a new notebook ASAP, under grace in a perfect way
         [] get money for new notebook (~81.000CZK)
         [] WHY do I want new notebook?
             [x] I want my own notebook
@@ -94,15 +99,15 @@ L                           Enable Dynamic Starfield
 
 ### VERSION 1.1 RELEASE TODOS
 [x] destroy player when aliens are below critical level (1)
-[] level 100 is the final                
+[] level 21 is final one               
 [x] add barriers to protect player (as from the original game) (1)
-[] improve barrier rendering
-	[] use higher resolution/array item or different attitude
-	[] make the barrier destruction more like stone not butter, iow use random pixel spread not just uniform hole
-[] implement difficulty scaling with each wave (2)
-	[] increase points for aliens with each wave
-	[] increase alien movement speed
-	[] increase ufo points
+[x] improve barrier rendering
+	[x] use higher resolution/array item or different attitude
+	[x] make the barrier destruction more non uniform
+[x] implement difficulty scaling with each wave (2)
+	[x] increase points for aliens with each wave
+	[x] increase alien movement speed
+	[x] increase ufo points per wave
 [x] rewrite Audio.js similar to LoadImages (2)
 [x] show intro screen (2)
     [x] create intro screen
@@ -111,18 +116,19 @@ L                           Enable Dynamic Starfield
         [x] create BMG logo
     [x] display blinking text click to play 
             NOTE: fuck blinking texts, static is enough
-[] show end screen (2)
-    [] show game summary
-        [] show score points in huge font in the centre
-        [] play end music
-        [] show click to menu button
-        [] show play again button
+[x] show end screen (2)
+    [x] show game summary
+        [x] show click to menu button
+        [x] show play again button
+[] test gameplay
 [] obfuscate .js files and distribute
 [] publish game
 [] distribute game on different channels
 
 ### VERSION 1.2 RELEASE TODOS
 [] animate player's leaving the screen after clearing wave (3)
+    [] move spaceship vertically up
+    [] show jets    
 [] create highres Ufo model
     [] model Ufo in Blender
     [] render frames in Blender
@@ -134,7 +140,7 @@ L                           Enable Dynamic Starfield
     [] load custom alien sprites (eg. your boss, wife, husband, ex, whatever...)
 
 ### KNOWN BUGS:
-- none
+- none. Really?
 
 ### HISTORY
 - Original game differences
@@ -165,4 +171,6 @@ L                           Enable Dynamic Starfield
 - added intro screen with logo (Finally!)
 - different sounds for each spaceship
 
-
+### version 1.2 - planned
+- animated alien sprites
+- boss fights

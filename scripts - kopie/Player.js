@@ -1,7 +1,7 @@
 // Player.js
 
 const PL_MOVE_SPEED = 7;
-const PL_SHOT_SPEED = 15;
+const PL_SHOT_SPEED = 14;
 const PL_SHOT_SPEED_BOOST = 30;
 const PL_SHIP_OFFSET = 20;
 
@@ -22,10 +22,6 @@ function playerClass() {
 		this.ship = newShip;
 		this.shot = newShot;
 	}
-    
-    this.reset = function() {
-        this.shotSpeed = PL_SHOT_SPEED;
-    }
 
 	this.move = function () {
 		if (keyHeld_Left) {

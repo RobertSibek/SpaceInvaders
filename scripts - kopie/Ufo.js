@@ -43,10 +43,10 @@ function ufoClass() {
 		this.isActive = true;
 	}
 
-	this.destroy = function (wave) {
+	this.destroy = function () {
 		playSound(sounds["ufoHit"]);
 		this.reset();
-		return this.points * wave;
+		return this.points;
 	}
 
 	this.move = function () {
