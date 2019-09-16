@@ -24,6 +24,7 @@ function countLoadedSfxAndLaunchIfReady() {
 }
 
 function loadSounds() {
+	debugText('Loading sounds');
     addSound("gameStart");
     addSound("playerFire");
     addSound("playerHit");
@@ -34,7 +35,7 @@ function loadSounds() {
     addSound("ufoHit");
     addSound("ufoSpawned");
     addSound("blastAll");
-	debugText('Loading sounds');
+    addSound("barrierHit");
 }
 
 function beginLoadingSound(sfxVar, fileName) {

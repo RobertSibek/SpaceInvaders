@@ -57,36 +57,44 @@ function barrierClass() {
                     var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
                     if (this.barrierGrid[bTileIndex]) {
                         this.barrierGrid[bTileIndex] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
                         this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS + 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS - 1] = 0;
-                        return true; // Deactivete shot after impact
+                        this.barrierGrid[bTileIndex - BARRIER_COLS] = 0;
+                        // check if the shot is at very first or last row of barrier grid
+                        var colPosition = bTileIndex % BARRIER_COLS;
+                        if (colPosition > 1 &&
+                            colPosition <= BARRIER_COLS) {
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
+                            if (getDiceRoll()) this.barrierGrid[bTileIndex - BARRIER_COLS] = 0;
+                        }
                     }
+                    playSound(sounds["barrierHit"]);
+                    return true; // Deactivete shot after impact
                 }
             }
-            return false;
-        } else {
-            // handle enemy shots            
-            if (shotY >= this.y && shotY <= this.y + BARRIER_ROWS * this.pixelWidth) {
-                if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {
-                    var bTileCol = Math.floor((shotX - this.x) / this.pixelWidth);
-                    var bTileRow = Math.floor((shotY - this.y) / this.pixelWidth);
-                    var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
-                    if (this.barrierGrid[bTileIndex]) {
-                        this.barrierGrid[bTileIndex] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
-                        this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS + 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS - 1] = 0;
-                        if (getDiceRoll()) this.barrierGrid[bTileIndex + 2 * BARRIER_COLS] = 0;
-                        return true; // Deactivete shot after impact
-                    }
-                }
-            }
-            return false;
         }
+        return false;
+    } else {
+        // handle enemy shots            
+        if (shotY >= this.y && shotY <= this.y + BARRIER_ROWS * this.pixelWidth) {
+            if (shotX >= this.x && shotX <= this.x + BARRIER_COLS * this.pixelWidth) {
+                var bTileCol = Math.floor((shotX - this.x) / this.pixelWidth);
+                var bTileRow = Math.floor((shotY - this.y) / this.pixelWidth);
+                var bTileIndex = bTileRow * BARRIER_COLS + bTileCol;
+                if (this.barrierGrid[bTileIndex]) {
+                    this.barrierGrid[bTileIndex] = 0;
+                    if (getDiceRoll()) this.barrierGrid[bTileIndex + 1] = 0;
+                    if (getDiceRoll()) this.barrierGrid[bTileIndex - 1] = 0;
+                    this.barrierGrid[bTileIndex + BARRIER_COLS] = 0;
+                    if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS + 1] = 0;
+                    if (getDiceRoll()) this.barrierGrid[bTileIndex + BARRIER_COLS - 1] = 0;
+                    if (getDiceRoll()) this.barrierGrid[bTileIndex + 2 * BARRIER_COLS] = 0;
+                    playSound(sounds["barrierHit"]);
+                    return true; // Deactivete shot after impact
+                }
+            }
+        }
+        return false;
     }
 }
+
