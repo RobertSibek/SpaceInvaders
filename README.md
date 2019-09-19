@@ -121,8 +121,16 @@ L                           Enable Dynamic Starfield
         [x] show click to menu button
         [x] show play again button
 [] test gameplay
-[] obfuscate .js files and distribute
-[] publish game
+[] add one life for each round finished without loosing life (until max. 5 lifes)
+[] think about how to add original 4 notes background music with increasing tempo (makes pressure to player)
+[x] obfuscate .js files and distribute
+[x] publish game
+[] check browser compatibility
+    [] IE
+    [] Edge
+    [] FireFox
+    [] Opera
+    [x] Chrome
 [] distribute game on different channels
 
 ### VERSION 1.2 RELEASE TODOS

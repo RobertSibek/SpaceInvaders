@@ -77,6 +77,9 @@ function keyPressed(evt) {
     }
     if (evt.keyCode == KEY_LETTER_S) {
         if (soundEnabled) {
+            if (sounds["DarkVibes"].isPlaying) {
+                stopSound(sounds["DarkVibes"]);
+            }
             soundEnabled = false;
             showMessage(3, 'Sound effects disabled');
         } else {

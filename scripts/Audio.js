@@ -4,8 +4,17 @@ const PATH_SFX = 'sounds/';
 
 var sfxLoaded = 0;
 var sfxToLoad = 0;
-
+var audioFormat = '.wav';
 var sounds = [];
+
+function setFormat() {
+    var audio = new Audio();
+    if (audio.canPlayType("audio/mp3")) {
+        audioFormat = '.mp3';
+    } else {
+        aduioFormat = '.wav';
+    }
+}
 
 function addSound(filename) {
     sfxToLoad++;
@@ -14,8 +23,9 @@ function addSound(filename) {
     if (filename == 'DarkVibes') {
         sounds[filename].src = PATH_SFX + filename + ".mp3";
     } else {
-        sounds[filename].src = PATH_SFX + filename + ".wav";
+        sounds[filename].src = PATH_SFX + filename + audioFormat;
     }
+    // includes not supported in IE
     if (filename.includes('playerFire')) {
         sounds[filename].volume = 0.3;
     }
@@ -32,6 +42,7 @@ function countLoadedSfxAndLaunchIfReady() {
 }
 
 function loadSounds() {
+    // setFormat();
     debugText('Loading sounds');
     addSound("gameStart");
     addSound("playerFire1");
@@ -55,6 +66,7 @@ function beginLoadingSound(sfxVar, fileName) {
 }
 
 function playSound(sfx) {
+    // exception handling not supported by IE, get workaround
     if (soundEnabled) {
         sfx.play().catch(function () {
             // do something
