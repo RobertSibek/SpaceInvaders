@@ -35,6 +35,7 @@ const ALIEN_SPACING_W = 5;
 const ALIEN_SPACING_H = 2;
 const SWARM_BASE_SPEED = 1;
 const SWARM_ADVANCE_JUMP = ALIEN_H / 4;
+const SPEED_BOOST_PER_WAVE = 0.1; // swarm movement speed increase per each waves
 const ALIEN_COUNT_BOOST_THRESHOLD = 30; // fewer than this, they speed up
 const ALIEN_BOOST_MULT = 0.15; // higher means faster when few aliens left
 const BASE_ALIEN_SCORE = 50;
@@ -107,6 +108,37 @@ window.onload = function () {
     createCanvas();
     canvas = document.getElementById(CANVAS_NAME);
     ctx = canvas.getContext('2d');
+}
+
+window.onblur = function () {
+    soundEnabled = false;
+    if (gameState == GAME_STATE_PLAY) {
+        pauseGame();
+    }
+    if (gameState == GAME_STATE_INTRO) {
+        if (sfxInteractionAllowed) {
+            sounds["DarkVibes"].pause();
+        }
+    }
+}
+
+window.onfocus = function () {
+    soundEnabled = true;
+    if (gameState == GAME_STATE_INTRO) {
+        playSound(sounds["DarkVibes"]);
+    }
+}
+
+function pauseGame() {
+    if (gameState == GAME_STATE_PLAY) {
+        gameState = GAME_STATE_PAUSE;
+        ufo.canBeSpawned = false;
+        showMessage(3, 'Game paused. Press P to resume.');
+    } else {
+        gameState = GAME_STATE_PLAY;
+        ufo.canBeSpawned = true;
+        showMessage(3, 'Game resumed');
+    }
 }
 
 function sfxLoadingDone() {
@@ -562,7 +594,6 @@ function drawAliens() {
         }
     }
 }
-const SPEED_BOOST_PER_WAVE = 0.1;
 
 function moveAliens() {
     swarmOffsetX += swarmMoveDir * swarmLowPopulationSpeedBoost + (swarmMoveDir * currentWave * SPEED_BOOST_PER_WAVE);

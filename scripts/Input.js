@@ -189,15 +189,7 @@ function keyPressed(evt) {
             showMessage(3, 'Reset to default');
         }
         if (evt.keyCode == KEY_LETTER_P) {
-            if (gameState == GAME_STATE_PLAY) {
-                gameState = GAME_STATE_PAUSE;
-                ufo.canBeSpawned = false;
-                showMessage(3, 'Game paused');
-            } else {
-                gameState = GAME_STATE_PLAY;
-                ufo.canBeSpawned = true;
-                showMessage(3, 'Game resumed');
-            }
+            pauseGame();
         }
     } // end in-game controls
     evt.preventDefault();

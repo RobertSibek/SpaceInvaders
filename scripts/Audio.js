@@ -6,6 +6,7 @@ var sfxLoaded = 0;
 var sfxToLoad = 0;
 var audioFormat = '.wav';
 var sounds = [];
+var sfxInteractionAllowed = false;
 
 function setFormat() {
     var audio = new Audio();
@@ -69,14 +70,12 @@ function playSound(sfx) {
     // exception handling not supported by IE, get workaround
     if (soundEnabled) {
         sfx.play().catch(function () {
-            // do something
+            sfxInteractionAllowed = true;
         });
     }
 }
 
 function stopSound(sfx) {
-    if (soundEnabled) {
-        sfx.currentTime = 0;
-        sfx.pause();
-    }
+    sfx.currentTime = 0;
+    sfx.pause();
 }
