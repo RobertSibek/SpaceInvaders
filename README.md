@@ -5,8 +5,8 @@
 
 ### CONTROLS
 #### BASIC
-LEFT ARROW, RIGHT ARROW		Player movement
-SPACEBAR                    Fire		
+LEFT ARROW, RIGHT ARROW		Player movement\
+SPACEBAR                    Fire\		
 1 2 3                       Change player's ship 		
 S                           Sound On/Off
 C                           Switch to custom alien images
