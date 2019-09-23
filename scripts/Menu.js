@@ -6,3 +6,26 @@
 		[] add menu item
 		[] handle key input
 */	
+
+//function menuClass() {
+//    this.menuItems = [];
+//    
+//    this.init = function () {
+//        
+//    }
+//    
+//    this.addItem = function (itemText) {
+//        
+//    }
+//    
+//    this.handleInput = function () {
+//        
+//    }
+//    
+//    this.draw = function () {
+//        
+//    }
+//    
+//  
+//    
+//}

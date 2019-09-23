@@ -2,7 +2,7 @@
 
 const PATH_IMG = 'images/';
 
-var totalResources = 9;
+var totalResources = 0;
 var numResourcesLoaded = 0;
 var images = {};
 
@@ -18,10 +18,11 @@ function loadImages() {
     loadImage("playershot2");
     loadImage("playershot3");
     loadImage("enemyshot");
-    loadImage("ufo");
+    loadImage("ufo1");
     loadImage("custom");
 
     function loadImage(name) {
+        totalResources++;
 
         images[name] = new Image();
         images[name].onload = function () {

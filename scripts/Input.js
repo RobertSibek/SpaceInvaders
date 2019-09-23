@@ -147,12 +147,12 @@ function keyPressed(evt) {
             if (showHitBoxes) {
                 showHitBoxes = false;
                 player.showHitbox = false;
-                ufo.showHitbox = false;
+                ufo.displayHitbox(false);
                 showMessage(3, 'Show hitboxes disabled');
             } else {
                 showHitBoxes = true;
                 player.showHitbox = true;
-                ufo.showHitbox = true;
+                ufo.displayHitbox(true);
                 showMessage(3, 'Show hitboxes enabled');
             }
         }

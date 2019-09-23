@@ -6,8 +6,7 @@ const MAX_STARS_PER_LAYER = 30;
 const MIN_MOVE_SPEED_Y = 3;
 const MAX_MOVE_SPEED_Y = 7;
 
-var starBrightness = ['#111111', '#222222', '#333333', '#444444', '#555555', '#666666', '#777777', '#888888',
-				  '#999999', '#AAAAAA', '#BBBBBB', '#CCCCCC', '#DDDDDD', '#EEEEEE', '#FFFFFF'];
+var starBrightness = ['#111111', '#222222', '#333333', '#444444', '#555555', '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB', '#CCCCCC', '#DDDDDD', '#EEEEEE', '#FFFFFF'];
 const MAX_STAR_POWER = starBrightness.length;
 
 var starfieldArray = [];
@@ -111,8 +110,8 @@ function starfieldClass() {
         this.currentFrame++;
         for (var l = 0; l < this.layerCount; l++) {
             stars = starfieldArray[l];
+            var layerMoveSpeedY = l + 1;
             for (var s = 0; s < stars.length; s++) {
-                var layerMoveSpeedY = getRandomIntInclusive(MIN_MOVE_SPEED_Y, MAX_MOVE_SPEED_Y);
                 var star = stars[s];
                 var newX = star.x + this.moveSpeedX;
                 var newY = star.y + layerMoveSpeedY;
@@ -143,7 +142,7 @@ function starfieldClass() {
             this.timeToChange = this.currentFrame + getRandomIntInclusive(2, 10) * FRAMES_PER_SECOND;
         }
     }
-
+    
     this.draw = function () {
         for (var l = 0; l < this.layerCount; l++) {
             stars = starfieldArray[l];

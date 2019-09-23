@@ -1,36 +1,61 @@
+const FRAMES_PER_SECONDS = 15;
+
 function spriteClass() {
-	this.init = function (ctx, width, height, image) {
+    this.init = function (image, cols, rows) {
+        this.sheetWidth = image.width;
+        this.sheetHeight = image.height;
+        this.frameWidth = this.sheetWidth / cols;
+        this.frameHeight = this.sheetHeight / rows;
+        this.image = image;
+        this.totalFrames = cols * rows;
+        this.cols = cols;
+        this.rows = rows;
+        this.spriteIndex = 0;
+        this.delay = 100;
+        this.currentFrame = 0;
+        this.nextFrame = 0;
+        this.x = CX;
+        this.y = CY;
+        this.showHitbox = false;
+    }
 
-		this.context = ctx;
-		this.width = width;
-		this.height = height;
-		this.image = image;
-		this.totalFrames = image.width / width;
-		this.delay = 100;
-		this.currentFrame = 0;
-		this.nextFrame = 0;
-		this.x = 0;
-		this.y = 0;
-	}
+    this.animate = function () {
+        this.currentFrame++;
+        if (this.currentFrame > this.nextFrame) {
+            if (this.spriteIndex < this.totalFrames - 1) {
+                this.spriteIndex++;
+            } else {
+                this.spriteIndex = 0;
+            }
+            this.nextFrame = this.currentFrame + this.delay * FRAMES_PER_SECONDS / 1000;
+        }
+    }
 
-	this.animate = function () {
-		this.currentFrame++;
-		if (this.currentFrame > this.nextFrame) {
-			if (this.spriteIndex < this.totalFrames - 1) {
-				this.spriteIndex++;
-			} else {
-				this.spriteIndex = 0;
-			}
-			this.nextFrame = this.currentFrame + this.delay * FRAMES_PER_SECOND / 1000;
+    this.move = function (x, y) {
+        this.animate();
+        this.x = x;
+        this.y = y;
+    }
+    
+	this.drawHitbox = function () {
+		if (this.showHitbox) {
+			drawOutlineRect(this.x, this.y, this.frameWidth * this.scale, this.frameHeight * this.scale, 'blue');
 		}
-	}
-	
-	this.move() = function (x, y) {
-		this.x = x;
-		this.y = y;		
-	}
+	}    
 
-	this.draw = function () {
-		this.context.drawImage(this.image, this.spriteIndex * this.width + 3, 4, this.width - 4, this.height - 4, this.x, this.y, this.width, this.height);
-	}
+    this.draw = function (scale) {
+        this.scale = scale;
+        var x = this.spriteIndex % this.cols;
+        var y = Math.floor(this.spriteIndex / this.cols);
+        ctx.drawImage(this.image, 
+                      x * this.frameWidth, 
+                      y * this.frameHeight, 
+                      this.frameWidth, 
+                      this.frameHeight, 
+                      this.x, 
+                      this.y,
+                      this.frameWidth * scale,
+                      this.frameHeight * scale);
+        if (this.showHitbox) { this.drawHitbox(); }
+    }
 }

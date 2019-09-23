@@ -120,9 +120,9 @@ L                           Enable Dynamic Starfield
     [x] show game summary
         [x] show click to menu button
         [x] show play again button
-[] test gameplay
-[] add one life for each round finished without loosing life (until max. 5 lifes)
-[] think about how to add original 4 notes background music with increasing tempo (makes pressure to player)
+[x] test gameplay
+[x] add one life for each round finished without loosing life (until max. 5 lifes)
+[] think about how to add original 4 notes background music with increasing tempo (makes pressure to player). It could be also similar sound motive, which tempo is increasing with alien swarm speed
 [x] obfuscate .js files and distribute
 [x] publish game
 [] check browser compatibility
@@ -131,17 +131,18 @@ L                           Enable Dynamic Starfield
     [] FireFox
     [] Opera
     [x] Chrome
+    [] Safari
 [] distribute game on different channels
 
 ### VERSION 1.2 RELEASE TODOS
 [] animate player's leaving the screen after clearing wave (3)
     [] move spaceship vertically up
     [] show jets    
-[] create highres Ufo model
-    [] model Ufo in Blender
-    [] render frames in Blender
-    [] create spritesheet
-    [] update code
+[x] create highres Ufo model
+    [x] model Ufo in Blender
+    [x] render frames in Blender
+    [x] create spritesheet
+    [x] update code
 [] add UFO hunt every 5th level
 [] add boss fight, every 10th level
 [] add easter eggs
@@ -178,7 +179,10 @@ L                           Enable Dynamic Starfield
 - changed animation loop from setInterval to requestAnimationFrame (battery saving, more stable performance)
 - added intro screen with logo (Finally!)
 - different sounds for each spaceship
+- new original Ufo model
+- added Highscore saving
 
 ### version 1.2 - planned
-- animated alien sprites
+- original animated alien sprites
 - boss fights
+- original spaceship(s)

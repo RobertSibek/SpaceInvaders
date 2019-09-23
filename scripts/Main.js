@@ -74,6 +74,7 @@ var currentFrame = 0; // counts how many times spent in the main game loop
 var requestNextFrame = false; // if paused, this will request next frame while staying in pause
 var showHitBoxes = false;
 var alienType = 0;
+var highscore = 0;
 
 // variables related to the aliens moving as a group, depends on which are alive
 var swarmOffsetX = 0;
@@ -89,6 +90,7 @@ var enemyShotX;
 var enemyShotY;
 var enemyShotIsActive = false;
 var playerFireSfx;
+var playerLostLifeInWave = false;
 
 // EASTER EGGS
 var customImageLoaded = false;
@@ -151,7 +153,7 @@ function initAll() {
     playerFireSfx = sounds["playerFire1"];
     starfield.init();
     starfield.enableDynamicLayers(true);
-    ufo.init(images["ufo"]);
+    ufo.init(images["ufo1"]);
     message.init(1000);
     fpsCounter.init();
     BMGLogo.init();
@@ -162,6 +164,7 @@ function initAll() {
 }
 
 function loadingDoneSoStartGame() {
+    loadScore();
     if (sfxLoadComplete) {
         window.requestAnimationFrame(mainGame);
         setInterval(countFps, 1000 / COUNT_FPS_TICK);
@@ -189,6 +192,30 @@ function debugText(text) {
     }
 }
 
+function saveScore() {
+    if (typeof (Storage) !== "undefined") {
+        if (playerScore > highscore) {
+            highscore = playerScore;
+        }
+        localStorage.setItem("highscore", highscore);
+    } else {
+        // storage not supported
+    }
+}
+
+function loadScore() {
+    if (typeof (Storage) !== "undefined") {
+        // Store
+        highscore = localStorage.getItem("highscore");
+        if (highscore == null) {
+            highscore = 0;
+        }
+    } else {
+        // storage not supported
+    }
+
+}
+
 function newGame() {
     currentWave = 1;
     playerScore = 0;
@@ -213,18 +240,25 @@ function resetGame() {
 }
 
 function endGame() {
+    saveScore();
     gameState = GAME_STATE_ENDSCREEN;
     starfield.enableDynamicLayers(true);
 }
 
 function startNextWave() {
     currentWave++;
+    if (!playerLostLifeInWave) {
+        if (player.lifes < 5) {
+            player.lifes++;
+        }
+    }
     alienPoints = currentWave * BASE_ALIEN_SCORE;
     if (alienType < 3) {
         alienType++;
     } else {
         alienType = 0;
     }
+    playerLostLifeInWave = false;
     resetGame();
 }
 
@@ -248,7 +282,10 @@ function drawIntroScreen() {
     ctx.fillStyle = '#F1F1AA';
     ctx.font = '30px Arial';
     ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 220);
-    return ctx;
+    var txt = 'Highscore: ' + lpad(highscore, 6);
+    ctx.fillStyle = '#C0F0BB';
+    ctx.font = '20px Arial';
+    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 260);
 }
 
 function drawEndScreen() {
@@ -667,6 +704,7 @@ function enemyShotCollisionsCheck() {
                 enemyShotIsActive = false;
                 if (player.lifes > 1) {
                     player.lifes--;
+                    playerLostLifeInWave = true;
                 } else {
                     endGame();
                 }
