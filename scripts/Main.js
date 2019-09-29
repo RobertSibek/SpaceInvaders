@@ -78,49 +78,48 @@ var currentFrame = 0; // counts how many times spent in the main game loop
 var requestNextFrame = false; // if paused, this will request next frame while staying in pause
 var showHitBoxes = false;
 var alienType = 0;
-var highscore = 0;
 var mainScreenPage = 0;
-var highScore = [];
+var topTenScores;
 var topTen = [
     {
         name: 'AAA',
-        score: 100
+        score: 10000
     },
     {
         name: 'BBB',
-        score: 90
+        score: 5000
     },
     {
         name: 'CCC',
-        score: 80
+        score: 2000
     },
     {
         name: 'DDD',
-        score: 70
+        score: 1500
     },
     {
         name: 'EEE',
-        score: 60
+        score: 1000
     },
     {
         name: 'FFF',
-        score: 50
+        score: 500
     },
     {
         name: 'GGG',
-        score: 40
+        score: 300
     },
     {
         name: 'HHH',
-        score: 30
+        score: 150
     },
     {
         name: 'III',
-        score: 20
+        score: 100
     },
     {
         name: 'JJJ',
-        score: 10
+        score: 50
     }
 ];
 
@@ -250,47 +249,11 @@ function debugText(text) {
     }
 }
 
-function saveScore() {
-    if (typeof (Storage) !== "undefined") {
-        if (playerScore > highscore) {
-            highscore = playerScore;
-        }
-        for (var i = 0; i < highScore.length; i++) {
-            localStorage.setItem("highScore" + i, highScore[i]);
-        }
-
-    } else {
-        // storage not supported
-    }
-}
-
-function loadScore() {
-    if (typeof (Storage) !== "undefined") {
-        for (var i = 0; i < 10; i++) {
-            highScore[i] = localStorage.getItem("highScore" + i);
-        }
-        //        topTen = localStorage.getItem("topTen");
-    } else {
-        // storage not supported
-    }
-}
-
-function drawHighScore() {
-    drawHorizontallyCenteredTextWithFont('Top 10 players', 100, '20px Arial', '#C0F0BB');
-    for (var i = 0; i < highScore.length; i++) {
-        var pl = {
-            name: highScore[i].substr(0, 3),
-            score: highScore[i].substr(4)
-        };
-        drawHorizontallyCenteredTextWithFont(pl.name + '.........' + lpad(pl.score, 6), 160 + i * 30, '20px Courier New', '#C0F0BB');
-    }
-}
-
 function newGame() {
     currentWave = 1;
     playerScore = 0;
-    player.lifes = 3;
     alienType = 0;
+    alienPoints = BASE_ALIEN_SCORE;
     godModeEnabled = false;
     player.reset();
     stopSound(sounds["DarkVibes"]);
@@ -347,8 +310,16 @@ function drawIntroScreen() {
 }
 
 function drawEndScreen() {
-    drawHorizontallyCenteredTextWithFont('GAME OVER', CY, '35px Arial', 'yellow');
-    drawHorizontallyCenteredTextWithFont('press Q to Main Screen or SPACE to Play again', CY + 50, '18px Arial', 'blue');
+    drawHorizontallyCenteredTextWithFont('GAME OVER', 200, '35px Arial', 'yellow');
+    drawHorizontallyCenteredTextWithFont('press Q to Main Screen or SPACE to Play again', 350, '18px Arial', 'blue');
+    // check if player beated some top ten player
+    for (var i = 0; i < topTenScores.length; i++) {
+        if (playerScore > topTenScores[i].score) {
+            drawHorizontallyCenteredTextWithFont('Congratulations you\'ve beaten' + topTenScores[i].name, 550, '18px Arial', '#CC4400');
+            break;
+        }
+    }
+    mainScreenPage = 0;
 }
 
 function drawControlsAndInfo() {
@@ -356,7 +327,6 @@ function drawControlsAndInfo() {
 }
 
 function drawEverything() {
-
     switch (gameState) {
         case GAME_STATE_INTRO:
             colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_INTRO_BACKGROUND);

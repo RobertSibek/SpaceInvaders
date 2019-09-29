@@ -4,6 +4,7 @@ const PL_MOVE_SPEED = 7;
 const PL_SHOT_SPEED = 15;
 const PL_SHOT_SPEED_BOOST = 30;
 const PL_SHIP_OFFSET = 20;
+const PL_LIFES = 3;
 
 function playerClass() {
 
@@ -26,6 +27,7 @@ function playerClass() {
     
     this.reset = function() {
         this.shotSpeed = PL_SHOT_SPEED;
+        this.lifes = PL_LIFES;
     }
 
 	this.move = function () {
