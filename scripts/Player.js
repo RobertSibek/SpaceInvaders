@@ -12,6 +12,7 @@ function playerClass() {
 		this.nextX = this.x;
 		this.ship = shipImg;
 		this.shot = shotImg;
+        this.moveSpeed = PL_MOVE_SPEED;
 		this.y = CANVAS_HEIGHT - this.ship.height - PL_SHIP_OFFSET;
 		this.lifes = 3;
 		this.shotSpeed = PL_SHOT_SPEED;
@@ -29,10 +30,10 @@ function playerClass() {
 
 	this.move = function () {
 		if (keyHeld_Left) {
-			this.nextX -= PL_MOVE_SPEED;
+			this.nextX -= this.moveSpeed;
 		}
 		if (keyHeld_Right) {
-			this.nextX += PL_MOVE_SPEED;
+			this.nextX += this.moveSpeed;
 		}
 
 		if (this.nextX > this.ship.width / 2 &&

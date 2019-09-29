@@ -7,6 +7,9 @@ const GAME_STATE_PLAY = 2;
 const GAME_STATE_PAUSE = 3;
 const GAME_STATE_ENDSCREEN = 4;
 const GAME_STATE_WINSCREEN = 5;
+const MS_INTRO = 0;
+const MS_HIGHSCORE = 1;
+const MS_CONTROLS = 2;
 
 // DEFAULT COLORS
 const CL_HEADER_TEXT = 'yellow';
@@ -22,6 +25,7 @@ const DISPLAY_TOP = HEADER_BG_HEIGHT; // minimum drawing Y distance from the top
 
 // GAME SETTINGS
 const COUNT_FPS_TICK = 10;
+const MAIN_SCREEN_SWITCH_DELAY = 3;
 
 // ENEMY SETTINGS
 const ENEMY_SHOT_SPEED = 3;
@@ -75,6 +79,50 @@ var requestNextFrame = false; // if paused, this will request next frame while s
 var showHitBoxes = false;
 var alienType = 0;
 var highscore = 0;
+var mainScreenPage = 0;
+var highScore = [];
+var topTen = [
+    {
+        name: 'AAA',
+        score: 100
+    },
+    {
+        name: 'BBB',
+        score: 90
+    },
+    {
+        name: 'CCC',
+        score: 80
+    },
+    {
+        name: 'DDD',
+        score: 70
+    },
+    {
+        name: 'EEE',
+        score: 60
+    },
+    {
+        name: 'FFF',
+        score: 50
+    },
+    {
+        name: 'GGG',
+        score: 40
+    },
+    {
+        name: 'HHH',
+        score: 30
+    },
+    {
+        name: 'III',
+        score: 20
+    },
+    {
+        name: 'JJJ',
+        score: 10
+    }
+];
 
 // variables related to the aliens moving as a group, depends on which are alive
 var swarmOffsetX = 0;
@@ -168,8 +216,8 @@ function loadingDoneSoStartGame() {
     if (sfxLoadComplete) {
         window.requestAnimationFrame(mainGame);
         setInterval(countFps, 1000 / COUNT_FPS_TICK);
+        setInterval(switchMainScreen, 1000 * MAIN_SCREEN_SWITCH_DELAY);
         initAll();
-        //        resetGame();
     }
 }
 
@@ -181,6 +229,16 @@ function mainGame() {
     drawEverything();
 }
 // *** END OF MAIN GAME LOOP ***
+
+function switchMainScreen() {
+    if (gameState == GAME_STATE_INTRO) {
+        if (mainScreenPage < 2) {
+            mainScreenPage++;
+        } else {
+            mainScreenPage = 0;
+        }
+    }
+}
 
 function countFps() {
     fpsCounter.tick();
@@ -197,7 +255,10 @@ function saveScore() {
         if (playerScore > highscore) {
             highscore = playerScore;
         }
-        localStorage.setItem("highscore", highscore);
+        for (var i = 0; i < highScore.length; i++) {
+            localStorage.setItem("highScore" + i, highScore[i]);
+        }
+
     } else {
         // storage not supported
     }
@@ -205,15 +266,24 @@ function saveScore() {
 
 function loadScore() {
     if (typeof (Storage) !== "undefined") {
-        // Store
-        highscore = localStorage.getItem("highscore");
-        if (highscore == null) {
-            highscore = 0;
+        for (var i = 0; i < 10; i++) {
+            highScore[i] = localStorage.getItem("highScore" + i);
         }
+        //        topTen = localStorage.getItem("topTen");
     } else {
         // storage not supported
     }
+}
 
+function drawHighScore() {
+    drawHorizontallyCenteredTextWithFont('Top 10 players', 100, '20px Arial', '#C0F0BB');
+    for (var i = 0; i < highScore.length; i++) {
+        var pl = {
+            name: highScore[i].substr(0, 3),
+            score: highScore[i].substr(4)
+        };
+        drawHorizontallyCenteredTextWithFont(pl.name + '.........' + lpad(pl.score, 6), 160 + i * 30, '20px Courier New', '#C0F0BB');
+    }
 }
 
 function newGame() {
@@ -270,27 +340,19 @@ function drawBackground() {
 
 function drawIntroScreen() {
     playSound(sounds["DarkVibes"]);
-    ctx.fillStyle = '#C4C4C4';
-    var txt = 'SPACE INVADERS 2019';
-    ctx.font = '50px Arial';
-    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY - 200);
-    var txt = 'by';
-    ctx.font = '25px Arial';
-    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 10, CY - 120);
+    drawHorizontallyCenteredTextWithFont('SPACE INVADERS 2019', CY - 200, '50px Arial', '#C4C4C4');
+    drawHorizontallyCenteredTextWithFont('by', CY - 120, '25px Arial', '#C4C4C4');
     BMGLogo.draw();
-    var txt = 'Press SPACE to play';
-    ctx.fillStyle = '#F1F1AA';
-    ctx.font = '30px Arial';
-    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 220);
-    var txt = 'Highscore: ' + lpad(highscore, 6);
-    ctx.fillStyle = '#C0F0BB';
-    ctx.font = '20px Arial';
-    ctx.fillText(txt, CX - ctx.measureText(txt).width / 2 + 20, CY + 260);
+    drawHorizontallyCenteredTextWithFont('Press SPACE to play', CY + 220, '30px Arial', '#F1F1AA');
 }
 
 function drawEndScreen() {
-    drawColorCenteredTextWithFont(CY, 'GAME OVER', '35px Arial', 'yellow');
-    drawColorCenteredTextWithFont(CY + 50, 'press Q to Main Screen or SPACE to Play again', '18px Arial', 'blue');
+    drawHorizontallyCenteredTextWithFont('GAME OVER', CY, '35px Arial', 'yellow');
+    drawHorizontallyCenteredTextWithFont('press Q to Main Screen or SPACE to Play again', CY + 50, '18px Arial', 'blue');
+}
+
+function drawControlsAndInfo() {
+    ctx.drawImage(images["controlsScreen"], 0, 0);
 }
 
 function drawEverything() {
@@ -300,7 +362,20 @@ function drawEverything() {
             colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CL_INTRO_BACKGROUND);
             drawBackground();
             starfield.draw();
-            drawIntroScreen();
+            switch (mainScreenPage) {
+                case MS_INTRO:
+                    drawIntroScreen();
+                    break;
+                case MS_HIGHSCORE:
+                    drawHighScore();
+                    break;
+                case MS_CONTROLS:
+                    drawControlsAndInfo();
+                    break;
+                default:
+                    drawIntroScreen();
+                    break;
+            }
             fpsCounter.draw();
             break;
         case GAME_STATE_PLAY:

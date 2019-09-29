@@ -192,13 +192,7 @@ function BMGLogoClass() {
                 }
             }
         }
-        ctx.fillStyle = '#666999';
-        ctx.font = '25px Arial';
-//        ctx.font = '35px Arial';
-        var bmg = 'Bad Mug Games';
-        var text = ctx.measureText(bmg);   
-//        ctx.fillText(bmg, CX - text.width / 2 - TILE_W / 2, CY + LOGO_ROWS * TILE_H * 0.75);
-        ctx.fillText(bmg, CX - text.width / 2 + TILE_W / 2, CY + LOGO_ROWS * TILE_H * 0.75);
+        drawHorizontallyCenteredTextWithFont('Bad Mug Games', CY + LOGO_ROWS * TILE_H * 0.75, '25px Arial', '#666999');
     }
 
 }

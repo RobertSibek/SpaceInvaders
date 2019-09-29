@@ -19,6 +19,7 @@ function loadImages() {
     loadImage("playershot3");
     loadImage("enemyshot");
     loadImage("ufo1");
+    loadImage("controlsScreen");
     loadImage("custom");
 
     function loadImage(name) {

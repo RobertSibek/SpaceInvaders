@@ -56,50 +56,12 @@ L                           Enable Dynamic Starfield
 	[x] allow to setup shot image
 [x] add star field background (parallax vertical scroll in 3 rows)
 [x] display shot as image
-[] tune the difficulty on new notebook
-    [] get a new notebook ASAP, under grace in a perfect way
-        [] get money for new notebook (~81.000CZK)
-        [] WHY do I want new notebook?
-            [x] I want my own notebook
-            [x] I want a perfect one
-                WHY?
-                [x] So I can enjoy the work on it
-                [x] Because I can focus on work fully without wanting a better one
-                [x] Because it will increase my UX and speed
-                [x] Because it reflects my self-worth
-            [] I'll have to return the old one               
-        [x] choose the perfect notebook - it's hard to decide, I'll buy both
-            [x] Why go for Macbook Pro?
-                PROS:
-                    [x] MacOS is just perfect
-                    [] can get job as iOS developer
-                    [] can continue with my own apps
-                    [] can colaborate with Radim
-                    [] Stylish piece of hardware
-                    [x] Possible future deployment both to iOS and Android
-                    [] Retina display
-                    [] OS optimization increases UX
-                    [x] can develop iOS apps in XCODE (love it!)
-                    [] it's hipsta-thing, everybody will see me as I'm rich
-                CONS:
-                    [] price
-                    [] lower HW specs than DELL
-            [] Why go for Dell XPS 15
-                PROS:
-                    [x] higher resolution than Macbook
-                    [x] OLED display
-                    [x] better HW specs (32GB RAM, 1TB, faster i9 CPU)
-                    [x] cheaper
-                    [x] can run windows games
-                    [x] Better GPU (NVidia 1650)
-                    [] touch screen (though have no usage for it currently)
-                CONS:
-                    [] can not deploy to iOS
-                    [] it's less hipsta-thing
+[] display game controls and points per aliens at the main screen (2/3)
+[] display top ten highscores at main screen (3/3)
 
 ### VERSION 1.1 RELEASE TODOS
 [x] destroy player when aliens are below critical level (1)
-[] level 21 is final one               
+[] level 34 is final one 
 [x] add barriers to protect player (as from the original game) (1)
 [x] improve barrier rendering
 	[x] use higher resolution/array item or different attitude
