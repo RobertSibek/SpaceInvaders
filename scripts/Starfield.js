@@ -56,7 +56,11 @@ function starfieldClass() {
     this.reset = function () {
         this.timeToChange = this.currentFrame + getRandomIntInclusive(5, 20) * FRAMES_PER_SECOND;
         if (this.dynamicLayers) {
-            this.moveSpeedX = getRandomIntInclusive(-2, 2);
+            if (getDiceRoll())
+                this.moveSpeedX = 2;
+            else
+                this.moveSpeedX = -2;
+//            this.moveSpeedX = getRandomIntInclusive(-2, 2);
         } else {
             starfield.moveSpeedX = 0;
         }
@@ -142,7 +146,7 @@ function starfieldClass() {
             this.timeToChange = this.currentFrame + getRandomIntInclusive(2, 10) * FRAMES_PER_SECOND;
         }
     }
-    
+
     this.draw = function () {
         for (var l = 0; l < this.layerCount; l++) {
             stars = starfieldArray[l];

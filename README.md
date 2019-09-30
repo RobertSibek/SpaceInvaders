@@ -38,7 +38,7 @@ L                           Enable Dynamic Starfield
 	[x] when player looses all lifes
 	[x] on new wave
 	[x] NOT when player loose one life only
-[] adjust player control to be more precise (2)
+[x] adjust player control to be more precise (2)
 [x] add sounds
 	[x] add enemy hit sfx
 	[x] add player hit sfx
@@ -56,12 +56,22 @@ L                           Enable Dynamic Starfield
 	[x] allow to setup shot image
 [x] add star field background (parallax vertical scroll in 3 rows)
 [x] display shot as image
-[] display game controls and points per aliens at the main screen (2/3)
-[] display top ten highscores at main screen (3/3)
+[] add comments to each class .js file with /* Usage: */ hint
+[] obfuscate .js files and distribute
+[] publish game on different channels
+    [] publish on Twitch
+    [] create own website www.spaceinvaders2019.com
+[] check browser compatibility
+    [] IE
+    [] Edge
+    [] FireFox
+    [] Opera
+    [x] Chrome
+    [] Safari
 
 ### VERSION 1.1 RELEASE TODOS
 [x] destroy player when aliens are below critical level (1)
-[] level 34 is final one 
+[x] level 21 is final one 
 [x] add barriers to protect player (as from the original game) (1)
 [x] improve barrier rendering
 	[x] use higher resolution/array item or different attitude
@@ -82,29 +92,31 @@ L                           Enable Dynamic Starfield
     [x] show game summary
         [x] show click to menu button
         [x] show play again button
-[x] test gameplay
-[x] add one life for each round finished without loosing life (until max. 5 lifes)
-[] think about how to add original 4 notes background music with increasing tempo (makes pressure to player). It could be also similar sound motive, which tempo is increasing with alien swarm speed
-[x] obfuscate .js files and distribute
-[x] publish game
-[] check browser compatibility
-    [] IE
-    [] Edge
-    [] FireFox
-    [] Opera
-    [x] Chrome
-    [] Safari
-[] distribute game on different channels
-
-### VERSION 1.2 RELEASE TODOS
-[] animate player's leaving the screen after clearing wave (3)
-    [] move spaceship vertically up
-    [] show jets    
-[x] create highres Ufo model
+[x] create own highres Ufo model
     [x] model Ufo in Blender
     [x] render frames in Blender
     [x] create spritesheet
-    [x] update code
+    [x] update code        
+[x] test gameplay
+[x] add one life for each round finished without loosing life (until max. 5 lifes)
+[x] display top ten highscores at main screen (3/3)
+[] display game controls and points per aliens at the main screen (2/3)
+    [] create NICE controls screen
+[] unify text colors used in game
+[] unify vertical text positions at all screens
+[] unify font size in game
+
+
+### VERSION 1.1.1 RELEASE TODOS
+[] use One font with monospacing
+[] refactor
+[] add flashTextClass
+
+### VERSION 1.2 RELEASE TODOS
+[] think about how to add original 4 notes background music with increasing tempo (makes pressure to player). It could be also similar sound motive, which tempo is increasing with alien swarm speed
+[] animate player's leaving the screen after clearing wave (3)
+    [] move spaceship vertically up
+    [] show jets    
 [] add UFO hunt every 5th level
 [] add boss fight, every 10th level
 [] add easter eggs
@@ -120,13 +132,13 @@ L                           Enable Dynamic Starfield
     [] after destroying alien, there a short sprite swap for blast image
     [] player's and alien's shot can destroy each other when met
     
-#### version 1.0
+#### version 1.0 - 10.9.2019
 - enhanced graphic
 - animated starfield background
 - standard controls
 - added Ufo
 
-### version 1.1
+### version 1.1 - 1.10.2019
 - God mode added
 - sound effect can be enabled/disabled now
 - new UFO arrival sound
@@ -145,6 +157,7 @@ L                           Enable Dynamic Starfield
 - added Highscore saving
 
 ### version 1.2 - planned
+- add original typewriter intro describing the story
 - original animated alien sprites
 - boss fights
 - original spaceship(s)

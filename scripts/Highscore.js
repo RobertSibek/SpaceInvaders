@@ -11,6 +11,10 @@ function saveScore() {
 function loadScore() {
     if (typeof (Storage) !== "undefined") {
         topTenScores = JSON.parse(localStorage.getItem('topTenScores'));
+        if (topTenScores == null) {
+            topTenScores = topTenDefault;
+            saveScore();
+        }
     } else {
         // storage not supported
     }

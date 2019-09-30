@@ -4,6 +4,7 @@ const KEY_LEFT = 37;
 const KEY_RIGHT = 39;
 const KEY_UP = 38;
 const KEY_DOWN = 40;
+const KEY_RETURN = 13;
 const KEY_SPACEBAR = 32;
 const KEY_BACKSPACE = 8;
 const KEY_TAB = 9;
@@ -50,6 +51,7 @@ const KEY_NUMBER_9 = 57;
 
 var keyHeld_Left = false;
 var keyHeld_Right = false;
+var pn = 0;
 
 function initInput() {
     document.addEventListener("keydown", keyPressed);
@@ -58,140 +60,165 @@ function initInput() {
 }
 
 function keyPressed(evt) {
-    if (showKeyCodes) {
-        showMessage(1, 'Pressed key with code ' + evt.keyCode);
-    }
-    if (evt.keyCode == KEY_BACKSPACE) {
-        showKeyCodes = !showKeyCodes;
-        showMessage(3, 'Show keyCodes ' + (showKeyCodes ? 'enabled' : 'disabled'));
-    }
-    if (evt.keyCode == KEY_SPACEBAR) {
-        if (gameState == GAME_STATE_INTRO ||
-            gameState == GAME_STATE_ENDSCREEN) {
-            gameState = GAME_STATE_PLAY;
-            newGame();
-        } else if (gameState == GAME_STATE_PLAY ||
-            gameState == GAME_STATE_PAUSE) {
-            playerShootIfReloaded();
-        }
-    }
-    if (evt.keyCode == KEY_LETTER_S) {
-        if (soundEnabled) {
-            if (sounds["DarkVibes"].isPlaying) {
-                stopSound(sounds["DarkVibes"]);
-            }
-            soundEnabled = false;
-            showMessage(3, 'Sound effects disabled');
-        } else {
-            soundEnabled = true;
-            showMessage(3, 'Sound effects enabled');
-            playSound(sounds["gameStart"]);
-        }
-    }
-    if (evt.keyCode == KEY_LETTER_D) {
-        console.log('Debug mode ' + (debugEnabled ? 'OFF' : 'ON'));
-        debugEnabled = !debugEnabled;
-        fpsCounter.isVisible = !fpsCounter.isVisible;
-    }
-    if (evt.keyCode == KEY_LESS_THAN) {
-        starfield.removeLayer();
-    }
-    if (evt.keyCode == KEY_GREATER_THAN) {
-        starfield.addLayer();
-    }
-    if (evt.keyCode == KEY_LEFT_BRACKET) {
-        var pow = starfield.setPower(-1);
-        message.push('Starfield power = ' + pow);
-    }
-    if (evt.keyCode == KEY_RIGHT_BRACKET) {
-        var pow = starfield.setPower(1);
-        message.push('Starfield power = ' + pow);
-    }
-    if (evt.keyCode == KEY_LETTER_L) {
-        var dynLayers = starfield.switchDynamicLayers();
-        message.push('Starfield dynamic layers ' + (dynLayers ? 'enabled' : 'disabled'));
-    }
-    if (evt.keyCode == KEY_LETTER_C) {
-        customImageLoaded = !customImageLoaded;
-        showMessage(3, 'Custom images ' + (customImageLoaded ? 'enabled' : 'disabled'));
-    }
+    if (gameState == GAME_STATE_SCORE_ENTRY) {
+        var key = evt.keyCode;
+        if (key >= KEY_LETTER_A &&
+            key <= KEY_LETTER_Z) {
 
-    if (evt.keyCode == KEY_LETTER_Q) {
-        gameState = GAME_STATE_INTRO;
-        starfield.enableDynamicLayers(true);
-    }
-    // Keycodes below are only available when in play
-    if (gameState == GAME_STATE_PLAY ||
-        gameState == GAME_STATE_PAUSE) {
-        if (evt.keyCode == KEY_LEFT) {
-            keyHeld_Left = true;
+            playerName[pn] = key;
+            if (pn < 2)
+                pn++;
         }
-        if (evt.keyCode == KEY_RIGHT) {
-            keyHeld_Right = true;
-        }
-        if (evt.keyCode == KEY_TAB) {
-            if (debugEnabled) requestNextFrame = true;
-        }
-        if (evt.keyCode == KEY_LETTER_G) {
-            if (godModeEnabled) {
-                godModeEnabled = false;
-                player.reset();
-                showMessage(3, 'God mode disabled');
-            } else {
-                godModeEnabled = true;
-                player.shotSpeed = PL_SHOT_SPEED_BOOST;
-                showMessage(3, 'God mode enabled');
+        if (key == KEY_BACKSPACE) {
+            if (pn >= 0) {
+                playerName[pn] = KEY_SPACEBAR;
+                if (pn > 0)
+                    pn--;
             }
         }
-        if (evt.keyCode == KEY_LETTER_H) {
-            if (showHitBoxes) {
-                showHitBoxes = false;
-                player.showHitbox = false;
-                ufo.displayHitbox(false);
-                showMessage(3, 'Show hitboxes disabled');
-            } else {
-                showHitBoxes = true;
-                player.showHitbox = true;
-                ufo.displayHitbox(true);
-                showMessage(3, 'Show hitboxes enabled');
-            }
+        if (key == KEY_RETURN) {
+            pn = 0;
+            setPlayerHighScore();
         }
-        if (evt.keyCode == KEY_LETTER_K) {
-            if (godModeEnabled) {
-                blastAllAliens();
-            }
+    } else {
+
+        if (showKeyCodes) {
+            showMessage(1, 'Pressed key with code ' + evt.keyCode);
         }
-        if (evt.keyCode == KEY_LETTER_T) {
-            if (gameState == GAME_STATE_PLAY) {
-                gameState = GAME_STATE_PAUSE;
-                ufo.canBeSpawned = false;
-                showMessage(1, 'Game paused for taking screenshots');
-            } else {
+        if (evt.keyCode == KEY_BACKSPACE) {
+            showKeyCodes = !showKeyCodes;
+            showMessage(3, 'Show keyCodes ' + (showKeyCodes ? 'enabled' : 'disabled'));
+        }
+        if (evt.keyCode == KEY_SPACEBAR) {
+            if (gameState == GAME_STATE_INTRO ||
+                gameState == GAME_STATE_ENDSCREEN) {
                 gameState = GAME_STATE_PLAY;
-                ufo.canBeSpawned = true;
-                showMessage(1, 'Game resumed');
+                newGame();
+            } else if (gameState == GAME_STATE_PLAY ||
+                gameState == GAME_STATE_PAUSE) {
+                playerShootIfReloaded();
             }
         }
-        if (evt.keyCode == KEY_NUMBER_1) {
-            player.changeShip(images["spaceship1"], images["playershot1"]);
-            playerFireSfx = sounds["playerFire1"];
+        if (evt.keyCode == KEY_LETTER_S) {
+            if (soundEnabled) {
+                if (sounds["DarkVibes"].isPlaying) {
+                    stopSound(sounds["DarkVibes"]);
+                }
+                soundEnabled = false;
+                showMessage(3, 'Sound effects disabled');
+            } else {
+                soundEnabled = true;
+                showMessage(3, 'Sound effects enabled');
+                playSound(sounds["gameStart"]);
+            }
         }
-        if (evt.keyCode == KEY_NUMBER_2) {
-            player.changeShip(images["spaceship2"], images["playershot2"]);
-            playerFireSfx = sounds["playerFire2"];
+        if (evt.keyCode == KEY_LETTER_D) {
+            console.log('Debug mode ' + (debugEnabled ? 'OFF' : 'ON'));
+            debugEnabled = !debugEnabled;
+            fpsCounter.isVisible = !fpsCounter.isVisible;
         }
-        if (evt.keyCode == KEY_NUMBER_3) {
-            player.changeShip(images["spaceship3"], images["playershot3"]);
-            playerFireSfx = sounds["playerFire3"];
+        if (evt.keyCode == KEY_LESS_THAN) {
+            starfield.removeLayer();
         }
-        // Reset to default settings
-        if (evt.keyCode == KEY_LETTER_R) {
-            showMessage(3, 'Reset to default');
+        if (evt.keyCode == KEY_GREATER_THAN) {
+            starfield.addLayer();
         }
-        if (evt.keyCode == KEY_LETTER_P) {
-            pauseGame();
+        if (evt.keyCode == KEY_LEFT_BRACKET) {
+            var pow = starfield.setPower(-1);
+            message.push('Starfield power = ' + pow);
         }
-    } // end in-game controls
+        if (evt.keyCode == KEY_RIGHT_BRACKET) {
+            var pow = starfield.setPower(1);
+            message.push('Starfield power = ' + pow);
+        }
+        if (evt.keyCode == KEY_LETTER_L) {
+            var dynLayers = starfield.switchDynamicLayers();
+            message.push('Starfield dynamic layers ' + (dynLayers ? 'enabled' : 'disabled'));
+        }
+        if (evt.keyCode == KEY_LETTER_C) {
+            customImageLoaded = !customImageLoaded;
+            showMessage(3, 'Custom images ' + (customImageLoaded ? 'enabled' : 'disabled'));
+        }
+
+        if (evt.keyCode == KEY_LETTER_Q) {
+            gameState = GAME_STATE_INTRO;
+            mainScreenPage = 0;
+            resetMsInterval();
+            starfield.enableDynamicLayers(true);
+        }
+        // Keycodes below are only available when in play
+        if (gameState == GAME_STATE_PLAY ||
+            gameState == GAME_STATE_PAUSE) {
+            if (evt.keyCode == KEY_LEFT) {
+                keyHeld_Left = true;
+            }
+            if (evt.keyCode == KEY_RIGHT) {
+                keyHeld_Right = true;
+            }
+            if (evt.keyCode == KEY_TAB) {
+                if (debugEnabled) requestNextFrame = true;
+            }
+            if (evt.keyCode == KEY_LETTER_G) {
+                if (godModeEnabled) {
+                    godModeEnabled = false;
+                    player.reset();
+                    showMessage(3, 'God mode disabled');
+                } else {
+                    godModeEnabled = true;
+                    player.shotSpeed = PL_SHOT_SPEED_BOOST;
+                    showMessage(3, 'God mode enabled');
+                }
+            }
+            if (evt.keyCode == KEY_LETTER_H) {
+                if (showHitBoxes) {
+                    showHitBoxes = false;
+                    player.showHitbox = false;
+                    ufo.displayHitbox(false);
+                    showMessage(3, 'Show hitboxes disabled');
+                } else {
+                    showHitBoxes = true;
+                    player.showHitbox = true;
+                    ufo.displayHitbox(true);
+                    showMessage(3, 'Show hitboxes enabled');
+                }
+            }
+            if (evt.keyCode == KEY_LETTER_K) {
+                if (godModeEnabled) {
+                    blastAllAliens();
+                }
+            }
+            if (evt.keyCode == KEY_LETTER_T) {
+                if (gameState == GAME_STATE_PLAY) {
+                    gameState = GAME_STATE_PAUSE;
+                    ufo.canBeSpawned = false;
+                    showMessage(1, 'Game paused for taking screenshots');
+                } else {
+                    gameState = GAME_STATE_PLAY;
+                    ufo.canBeSpawned = true;
+                    showMessage(1, 'Game resumed');
+                }
+            }
+            if (evt.keyCode == KEY_NUMBER_1) {
+                player.changeShip(images["spaceship1"], images["playershot1"]);
+                playerFireSfx = sounds["playerFire1"];
+            }
+            if (evt.keyCode == KEY_NUMBER_2) {
+                player.changeShip(images["spaceship2"], images["playershot2"]);
+                playerFireSfx = sounds["playerFire2"];
+            }
+            if (evt.keyCode == KEY_NUMBER_3) {
+                player.changeShip(images["spaceship3"], images["playershot3"]);
+                playerFireSfx = sounds["playerFire3"];
+            }
+            // Reset to default settings
+            if (evt.keyCode == KEY_LETTER_R) {
+                showMessage(3, 'Reset to default');
+            }
+            if (evt.keyCode == KEY_LETTER_P) {
+                pauseGame();
+            }
+        } // end in-game controls
+    }
     evt.preventDefault();
 }
 
