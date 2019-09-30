@@ -21,8 +21,8 @@ function loadScore() {
 }
 
 function drawHighScore() {
-    drawHorizontallyCenteredTextWithFont('Top 10 players', 100, '20px Arial', '#C0F0BB');
+    drawHorizontallyCenteredTextWithFont('Top 10 players', POS_HEADER, FNT_HEADER, CL_TEXT_HEADER);
     for (var i = 0; i < topTenScores.length; i++) {
-        drawHorizontallyCenteredTextWithFont(topTenScores[i].name + '.........' + lpad(topTenScores[i].score, 6), 160 + i * 30, '20px Courier New', '#C0F0BB');
+        drawHorizontallyCenteredTextWithFont(topTenScores[i].name + '.........' + lpad(topTenScores[i].score, 6), POS_SUBTEXT + i * 30, FNT_MONO3, CL_TEXT_NORMAL);
     }
 }

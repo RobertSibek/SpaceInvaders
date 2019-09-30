@@ -54,10 +54,14 @@ function drawText(x, y, text) {
 
 // drawColorCenteredTextWithFont
 function drawHorizontallyCenteredTextWithFont(text, y, font, color, align) {
-    ctx.textAlign = (align != null) ? align : 'center';
-    ctx.font = font;
-    ctx.fillStyle = color;
-    ctx.fillText(text, CX , y);
+	ctx.textAlign = (align != null) ? align : 'center';
+	ctx.font = font;
+	ctx.fillStyle = color;
+	if (align == 'left') {
+		ctx.fillText(text, CX - ctx.measureText(text).width / 2, y)
+	} else {
+		ctx.fillText(text, CX, y);
+	}
 }
 
 function saveFontSettings() {
@@ -114,6 +118,6 @@ function colorRect(x, y, width, height, color) {
 function colorCircle(x, y, r, color) {
 	ctx.fillStyle = color;
 	ctx.beginPath();
-	ctx.arc(x, y, r, 0, Math.PI*2, true);
+	ctx.arc(x, y, r, 0, Math.PI * 2, true);
 	ctx.fill();
 } // drawCircle()

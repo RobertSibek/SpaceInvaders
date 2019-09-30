@@ -192,7 +192,7 @@ function BMGLogoClass() {
                 }
             }
         }
-        drawHorizontallyCenteredTextWithFont('Bad Mug Games', CY + LOGO_ROWS * TILE_H * 0.75, '25px Arial', '#666999');
+        drawHorizontallyCenteredTextWithFont('Bad Mug Games', CY + LOGO_ROWS * TILE_H * 0.75, '25px Arial', CL_TEXT_SUBHEADER);
     }
 
 }

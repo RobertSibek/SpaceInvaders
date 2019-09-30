@@ -100,12 +100,11 @@ L                           Enable Dynamic Starfield
 [x] test gameplay
 [x] add one life for each round finished without loosing life (until max. 5 lifes)
 [x] display top ten highscores at main screen (3/3)
-[] display game controls and points per aliens at the main screen (2/3)
-    [] create NICE controls screen
-[] unify text colors used in game
-[] unify vertical text positions at all screens
-[] unify font size in game
-
+[x] display game controls and points per aliens at the main screen (2/3)
+    [x] create NICE controls screen
+[x] unify text colors used in game
+[x] unify vertical text positions at all screens
+[x] unify font size in game
 
 ### VERSION 1.1.1 RELEASE TODOS
 [] use One font with monospacing
